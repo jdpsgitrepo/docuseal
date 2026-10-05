@@ -6,7 +6,8 @@
   <%# Grain above the water, as collab does; a static SVG because the filter tags are not valid ERB-checked HTML. %>
   <img class="sgn-layer sgn-grain" src="/jdpools/grain.svg" alt="" aria-hidden="true" style="width: 100%; height: 100%;">
 
-  <div class="sgn-stage">
+  <div class="sgn-stage jdp-stage">
+    <div class="jdp-layout">
     <div class="sgn-well">
       <div class="sgn-card">
         <img class="sgn-logo sgn-rise" style="--sgn-i: 1" src="/logo-jdpools.png" alt="J.D.Pools" width="199" height="100">
@@ -69,22 +70,24 @@
         </nav>
       </div>
     </div>
-  </div>
 
-  <section class="sgn-features" aria-label="<%= t('jdp_app_name') %>">
-    <div class="sgn-features-grid">
-      <% [%w[devices any_device], %w[shield_check secure], %w[world languages], %w[building jd_it]].each do |icon, key| %>
-        <div class="sgn-feature">
-          <span class="sgn-feature-icon"><%= svg_icon(icon) %></span>
-          <div>
-            <h2><%= t("jdp_feature_#{key}_title") %></h2>
-            <p><%= t("jdp_feature_#{key}_body") %></p>
+    <section class="sgn-features" aria-label="<%= t('jdp_app_name') %>">
+      <div class="sgn-features-grid">
+        <% [%w[devices any_device], %w[shield_check secure], %w[world languages], %w[building jd_it]].each_with_index do |(icon, key), i| %>
+          <div class="sgn-feature sgn-rise" style="--sgn-i: <%= 6 + i %>">
+            <span class="sgn-feature-icon"><%= svg_icon(icon) %></span>
+            <div>
+              <h2><%= t("jdp_feature_#{key}_title") %></h2>
+              <p><%= t("jdp_feature_#{key}_body") %></p>
+            </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
+    </section>
     </div>
+
     <div class="sgn-attribution">
       <%= render 'shared/powered_by' %>
     </div>
-  </section>
+  </div>
 </div>
