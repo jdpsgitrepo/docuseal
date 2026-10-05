@@ -1,0 +1,59 @@
+<%# JD Pools staff guide. Text comes from config/locales/jdpools_onboarding.*.yml in the chosen EN / TH locale. %>
+<% l = jdp_locale %>
+<% content_for(:html_title, t('jdp_guide.title', locale: l)) %>
+<div class="max-w-3xl mx-auto space-y-8 pb-10" lang="<%= l %>">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-3xl md:text-4xl font-bold"><%= t('jdp_guide.title', locale: l) %></h1>
+      <p class="mt-2 text-base opacity-70"><%= t('jdp_guide.subtitle', locale: l) %></p>
+    </div>
+    <nav class="flex items-center rounded-full border border-base-300 bg-white p-1 text-sm font-medium" aria-label="<%= t('jdp_language', locale: l) %>">
+      <% { en: 'EN', th: 'ไทย' }.each do |code, label| %>
+        <%= link_to label, jdpools_guide_path(lang: code), class: "px-3 py-1 rounded-full #{code == l ? 'bg-neutral text-neutral-content' : 'opacity-70 hover:opacity-100'}", lang: code, aria: { current: code == l ? 'true' : nil } %>
+      <% end %>
+    </nav>
+  </div>
+
+  <nav class="rounded-box border border-base-300 bg-white p-5" aria-label="<%= t('jdp_guide.contents', locale: l) %>">
+    <div class="text-xs font-semibold uppercase tracking-wide opacity-60 mb-3"><%= t('jdp_guide.contents', locale: l) %></div>
+    <ol class="grid gap-1.5 text-sm sm:grid-cols-2 list-decimal list-inside">
+      <% @sections.each do |section| %>
+        <li><a href="#<%= section[:id] %>" class="link link-hover"><%= section[:title] %></a></li>
+      <% end %>
+    </ol>
+  </nav>
+
+  <% @sections.each_with_index do |section, i| %>
+    <section id="<%= section[:id] %>" class="scroll-mt-6 space-y-3">
+      <h2 class="text-xl md:text-2xl font-semibold flex items-center gap-3">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-neutral text-neutral-content text-sm shrink-0"><%= i + 1 %></span>
+        <span><%= section[:title] %></span>
+        <% if section[:admin] %>
+          <span class="badge badge-outline badge-sm"><%= t('jdp_guide.admin_badge', locale: l) %></span>
+        <% end %>
+      </h2>
+      <% if section[:steps].present? %>
+        <ol class="list-decimal pl-6 space-y-2 text-base leading-relaxed">
+          <% section[:steps].each do |step| %>
+            <li><%= step %></li>
+          <% end %>
+        </ol>
+      <% end %>
+      <% Array.wrap(section[:body]).each do |paragraph| %>
+        <p class="text-base leading-relaxed opacity-90"><%= paragraph %></p>
+      <% end %>
+      <% if section[:qa].present? %>
+        <dl class="space-y-4">
+          <% section[:qa].each do |item| %>
+            <div class="rounded-box border border-base-300 bg-white p-4">
+              <dt class="font-semibold"><%= item[:q] %></dt>
+              <dd class="mt-1 opacity-80 leading-relaxed"><%= item[:a] %></dd>
+            </div>
+          <% end %>
+        </dl>
+      <% end %>
+    </section>
+  <% end %>
+
+  <p class="text-sm opacity-70 border-t border-base-300 pt-6"><%= t('jdp_guide.help', locale: l) %></p>
+</div>

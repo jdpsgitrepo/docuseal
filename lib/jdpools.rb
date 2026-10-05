@@ -46,6 +46,12 @@ module Jdpools
     ENV.fetch('JDP_SOURCE_URL', 'https://github.com/jdpsgitrepo/docuseal')
   end
 
+  # EN / TH choice for J.D. Pools pages (lander, guide, signer help, walkthrough), remembered in
+  # the jdp_lang cookie. The staff UI itself stays in the account locale.
+  def locale_for(cookies)
+    cookies[Jdpools::LanguageCookie::COOKIE].to_s == 'th' ? :th : :en
+  end
+
   def member?(user)
     user&.role == MEMBER_ROLE
   end

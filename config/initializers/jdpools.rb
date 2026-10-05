@@ -56,4 +56,6 @@ end
 ActiveSupport.on_load(:routes) do
   post '/auth/entra' => 'jdpools/entra_sessions#create', as: :jdpools_entra_sign_in
   get '/auth/entra/callback' => 'jdpools/entra_sessions#callback', as: :jdpools_entra_callback
+  get '/guide' => 'jdpools/guide#show', as: :jdpools_guide
+  get '/help/signing' => 'jdpools/signer_help#show', as: :jdpools_signer_help
 end

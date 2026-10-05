@@ -12,3 +12,5 @@
   <%= t('thanks') %>,<br><%= @current_account.name %>
   </p>
 <% end %>
+<%# JD Pools: help for first-time signers. %>
+<p style="font-size: 13px; color: #6a6f87;"><%= t('jdp_email_how_to_sign_html', url: jdpools_signer_help_url(host: @custom_domain || ENV.fetch('EMAIL_HOST', Docuseal.default_url_options[:host]))) %></p>

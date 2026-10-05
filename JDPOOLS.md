@@ -38,6 +38,7 @@ confidential. Never commit secrets: credentials and IDs live in Railway variable
 | Automatic email reminders | Pro only (settings form saves, nothing sends) | `app/jobs/jdpools/submitter_reminder_job.rb` |
 | Thai in generated PDFs (tone marks stacked correctly; audit trail no longer drops Thai) | HexaPDF does no shaping; audit trail's Helvetica has no Thai | `lib/jdpools/thai_pdf_text.rb`, `config/jdpools/fonts/` (Laksaman, TLWG, GPLv2+ with font exception) |
 | Sign-in lander at `/`: the jdpoolstech front-door design (collab's sign-in) with Admin Sign In in the card, feature cards below, EN / TH toggle (remembered in `jdp_lang` cookie) | DocuSeal marketing page | `lib/jdpools/{landing_redirect,language_cookie,sign_in_layout}.rb`, `app/views/jdpools/_sign_in.html.erb`, `app/views/layouts/jdpools_signin.html.erb`, `public/jdpools/` |
+| Onboarding: staff guide `/guide` (EN/TH, admin section for admins), JD walkthrough (DocuSeal's tour reworded + Thai), first-steps panel for senders with no documents, public signer help `/help/signing` linked from invitation emails and the signing page | DocuSeal tour, English only, shown only once a template exists | `config/locales/jdpools_onboarding.{en,th}.yml`, `app/controllers/jdpools/{guide,signer_help}_controller.rb`, `app/views/jdpools/` |
 | J.D. Pools branding (colours, logo, favicon, titles) | Pro only (custom logo) | DaisyUI theme in `tailwind.config.js`, `public/jdpools-logo.png`, favicons |
 | Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
 | Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
@@ -126,6 +127,10 @@ Upstream lands several commits a day. Rules that keep merges cheap:
 |---|---|
 | `app/views/devise/sessions/_omniauthable.html.erb` | Empty upstream; renders the Microsoft button |
 | `app/views/devise/sessions/new.html.erb` | With SSO on, renders `jdpools/_sign_in` (the lander: Microsoft button, signer note, folded IT-admin password form); upstream markup kept in the else branch |
+| `app/views/shared/_navbar.html.erb` | "Guide" link next to Settings |
+| `app/views/templates_dashboard/index.html.erb` | Welcome card + tour text in the EN/TH choice; members' tour ends on the guide; first-steps panel when no documents |
+| `app/views/shared/_app_tour.html.erb` | Tour text in the EN/TH choice |
+| `app/views/submitter_mailer/invitation_email.html.erb` | "How to sign" help line |
 | `app/views/shared/_powered_by.html.erb` | "Source code" link to our fork (AGPL section 13) |
 | `app/views/layouts/application.html.erb` | Attribution + source footer on staff pages (7(b), section 13) |
 | `app/views/notifications_settings/_reminder_banner.html.erb` | Drops the "Unlock with Pro" banner |

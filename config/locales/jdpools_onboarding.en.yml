@@ -1,0 +1,130 @@
+# JD Pools onboarding (see JDPOOLS.md): staff guide, signer help, welcome card and walkthrough.
+en:
+  jdp_guide_nav: "Guide"
+  jdp_how_to_sign: "How to sign?"
+  jdp_email_how_to_sign_html: "New to signing online? <a href=\"%{url}\">How to sign (2 minutes)</a> · วิธีลงนาม"
+  jdp_welcome_title: "Welcome to JD e-Sign"
+  jdp_welcome_description_html: "Take the 1-minute tour, or <a href=\"%{url}\" class=\"link\">read the guide</a>."
+
+  jdp_first_steps:
+    lede: "Send your first document for signature in three steps."
+    tour: "Take the tour"
+    guide: "Read the guide"
+    steps:
+      - title: "Upload"
+        body: "Drop a PDF or Word file below, or click to choose one."
+      - title: "Place fields"
+        body: "Drag Signature, Date and Text fields onto the page for each signer."
+      - title: "Send"
+        body: "Enter the signers' emails. They sign on their phone; you get the signed PDF."
+
+  jdp_guide:
+    title: "How to use JD e-Sign"
+    subtitle: "Everything you need to send your first document, in about five minutes."
+    contents: "Contents"
+    admin_badge: "IT admins"
+    help: "Still stuck? Email it-service@jdpools.com and IT will help."
+    sections:
+      - id: what
+        title: "What JD e-Sign is for"
+        body:
+          - "JD e-Sign replaces printing, signing by hand and scanning. You upload a document, mark where people sign, and send it. They sign on their phone or computer, and everyone receives the signed PDF by email."
+          - "The people you send to don't need an account, an app or Adobe. They only open the link in their email."
+          - "You see documents sent by anyone in your own department. People in other departments don't see yours. IT admins see everything."
+      - id: first
+        title: "Send your first document"
+        steps:
+          - "On the Document Templates page, click Upload (or drag your PDF or Word file onto the page)."
+          - "The document opens in the editor. On the right, choose a field type (Signature, Date, Text...) and drag it onto the page where it belongs."
+          - "Each colour is one signer. If more than one person signs, add a party at the top right (e.g. Employee, Manager) and place their fields."
+          - "Click Save, then Send."
+          - "Type the signers' email addresses (one per party) and click Add recipients. They get an email from it-service@jdpools.com straight away."
+        body:
+          - "That's it. When everyone has signed, you and every signer receive the completed PDF with its audit log."
+      - id: templates
+        title: "Reuse a document as a template"
+        body:
+          - "Every document you upload stays as a template. Next time, open it from Document Templates and click Send: no need to place the fields again."
+          - "Good candidates: employment documents, handover forms, acknowledgements, NDAs, anything you send more than once."
+          - "Use Clone to make a variant without changing the original, and Archive to retire a template you no longer need."
+      - id: order
+        title: "Several signers, and signing order"
+        body:
+          - "Add one party per person who must sign (Employee, Manager, HR...). Each party only sees and fills their own fields."
+          - "By default signers are invited one after another, in the order of the parties: the next person is only emailed when the previous one finishes. To invite everyone at once, untick Preserve order in the Send dialog."
+      - id: yourself
+        title: "Sign a document yourself"
+        body:
+          - "If you are one of the signers, open the template and click Sign it yourself, or use Sign now next to your name in the submissions list."
+      - id: track
+        title: "Track progress and get the signed copy"
+        body:
+          - "Open a template to see its submissions. Each one shows a status: Sent, Opened, Completed or Declined."
+          - "Someone hasn't signed? Use Copy link to send it through LINE or Teams, or re-send the email."
+          - "Once completed, open the submission and click Download for the signed PDF. The audit log shows who signed, when, and from which device."
+      - id: reminders
+        title: "Reminders"
+        body:
+          - "JD e-Sign can email signers who haven't finished. IT sets the schedule once for everyone (for example after 2 and 5 days). Ask IT if you need a different schedule."
+      - id: thai
+        title: "Thai documents"
+        body:
+          - "Write the Thai wording in your Word or PDF file before uploading, and use JD e-Sign fields for signatures, dates, initials and checkboxes."
+          - "Signers whose phone is set to Thai see the signing screen in Thai. Thai typed into text fields comes out correctly in the signed PDF."
+      - id: faq
+        title: "Common questions"
+        qa:
+          - q: "Is an electronic signature legally valid?"
+            a: "Thailand's Electronic Transactions Act recognises electronic signatures for ordinary business and employment documents, and every signed PDF carries a digital signature and audit log. A few things (for example some government filings, land and family matters) still need wet ink: check with HR or Legal if you are unsure."
+          - q: "The signer says they didn't get the email."
+            a: "Ask them to check Junk, then use Copy link on the submission and send the link directly."
+          - q: "I sent it to the wrong person or the wrong file."
+            a: "Archive the submission. The link stops working, and you can send a corrected one."
+          - q: "Who can see my documents?"
+            a: "You, everyone in your Entra department, and IT admins."
+      - id: admin
+        title: "For IT admins"
+        admin: true
+        body:
+          - "Give someone access: in Entra, Enterprise apps → JD Pools DocuSeal → Users and groups, assign them DocuSeal Sender (or DocuSeal Admin). Their department comes from their Entra profile, so make sure it is set. The account is created on their first sign-in."
+          - "Settings worth setting once: Notifications (reminder schedule), Personalization (invitation and completion email wording; a bilingual Thai/English body works well), E-Signature (signing certificate)."
+          - "Password sign-in is only for the break-glass account. Everyone else uses Sign in with Microsoft."
+
+  jdp_signer_help:
+    title: "How to sign a document"
+    lede: "Someone at J.D. Pools has sent you a document to sign. It takes about two minutes, on your phone or computer."
+    steps_title: "Steps"
+    steps:
+      - "Open the email from J.D. Pools (it-service@jdpools.com) and tap Review and Sign."
+      - "Read the document. The parts you need to fill in are highlighted."
+      - "Fill in each field and tap Next. For your signature, draw it with your finger or mouse, or tap Type to type your name."
+      - "Tap Complete (or Sign and Complete) on the last step."
+      - "You will receive the signed copy by email. You can also download it straight away."
+    tips_title: "Good to know"
+    tips:
+      - "You don't need an account, a password or an app."
+      - "Your phone's language decides the language of the signing screen: Thai or English."
+      - "If you shouldn't be signing it, tap Decline and give a reason. The sender is told."
+      - "Genuine requests come from it-service@jdpools.com and open on sign.jdpoolstech.com. If a link looks different, don't use it."
+    help: "Questions about the document? Reply to the invitation email or contact the person who sent it."
+    back: "Back to sign-in"
+
+  # The built-in walkthrough (DocuSeal's app_tour), reworded for J.D. Pools.
+  app_tour:
+    template_and_submissions_description: "Switch between Templates (reusable documents) and Submissions (every document you've sent, with its status)."
+    upload_a_pdf_file_description: "Start here: upload a PDF or Word file. It becomes a template you can send again any time."
+    select_a_signer_party_description: "Each signer is a party (Employee, Manager...). Pick one here, or add another if the document needs more than one signature."
+    available_parties_description: "The parties on this document. Select one, then place that person's fields."
+    available_field_types_description: "Drag these onto the page: Signature, Date, Text, Checkbox and more."
+    text_input_field_description: "For names, IDs or any short text the signer types in."
+    signature_field_description: "Where the signer signs: they draw it or type it."
+    added_fields_description: "Every field you have placed. Reorder, edit or remove them here."
+    field_settings_description: "Make a field required, add a hint for the signer, or change its size."
+    send_document_description: "When the fields are placed, click Send and enter each signer's email."
+    sign_yourself_description: "If you are one of the signers, sign it yourself here."
+    copy_and_share_link_description: "Copy this link to share through LINE or Teams. Anyone with it can sign after entering their email."
+    sign_the_document_description: "If you are one of the signers, sign it here."
+    add_recipients_description: "Enter the signers' email addresses. They are emailed from it-service@jdpools.com."
+    settings_account_description: "IT manages settings and access. Your profile (name, saved signature) is under Settings → Profile."
+    support_description: "Questions? Open the Guide in the top bar, or email it-service@jdpools.com."
+    settings_template_description: "Your profile and saved signature are in Settings."

@@ -75,14 +75,15 @@
         <% user_config = current_user.user_configs.find_or_initialize_by(key: UserConfig::SHOW_APP_TOUR) %>
         <% if user_config.new_record? || user_config.value || params[:tour] == 'true' %>
           <div class="hidden md:block">
-            <app-tour id="app_tour" data-show-tour="<%= params[:tour] == 'true' || user_config.value %>" data-type="dashboard" data-next-page-path="<%= @templates.first && can?(:edit, @templates.first) ? edit_template_path(@templates.first, params.permit(:tour)) : settings_account_path %>" data-i18n="<%= t('app_tour').to_json %>"></app-tour>
+            <% jdp_l = Jdpools.locale_for(cookies) %>
+            <app-tour id="app_tour" data-show-tour="<%= params[:tour] == 'true' || user_config.value %>" data-type="dashboard" data-next-page-path="<%= @templates.first && can?(:edit, @templates.first) ? edit_template_path(@templates.first, params.permit(:tour)) : (can?(:manage, current_account) ? settings_account_path : jdpools_guide_path) %>" data-i18n="<%= t('app_tour', locale: jdp_l).to_json %>"></app-tour>
             <% if user_config.new_record? && !params.key?(:tour) %>
               <div id="app_tour_manager" class="h-36 rounded-2xl pt-3 px-7 w-full border border-dashed border-base-300">
                 <div class="text-xl text-center font-semibold text-base-content">
-                  <%= t('welcome_to_docuseal') %>
+                  <%= t('jdp_welcome_title', locale: jdp_l) %>
                 </div>
                 <div class="my-2 text-center text-xs text-base-content/70">
-                  <%= t('start_a_quick_tour_to_learn_how_to_create_and_send_your_first_document') %>
+                  <%= t('jdp_welcome_description_html', url: jdpools_guide_path, locale: jdp_l) %>
                 </div>
                 <div class="flex gap-2 mt-3 w-full">
                   <remove-on-event data-on="submit" data-selector-id="app_tour_manager" class="block w-full">
@@ -101,6 +102,7 @@
   <% end %>
 </dashboard-dropzone>
 <% if show_dropzone %>
+  <%= render 'jdpools/first_steps' if @templates.blank? && params[:q].blank? %>
   <%= render 'templates/dropzone' %>
 <% end %>
 <% if @templates.present? || @template_folders.present? || params[:q].blank? %>

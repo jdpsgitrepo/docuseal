@@ -2,3 +2,5 @@
   <%= render 'shared/logo', class: 'w-9 h-9 md:w-12 md:h-12' %>
   <span>e-Sign</span>
 </a>
+<%# JD Pools: help for first-time signers. %>
+<a href="<%= jdpools_signer_help_path(lang: I18n.locale.to_s.start_with?('th') ? 'th' : 'en') %>" target="_blank" rel="noopener" class="absolute right-4 top-4 text-sm underline opacity-70 hover:opacity-100 whitespace-nowrap"><%= t('jdp_how_to_sign') %></a>

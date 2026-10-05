@@ -1,0 +1,48 @@
+<%# JD Pools: public "How to sign a document" page for first-time signers (layouts/jdpools_signin). %>
+<% lang = I18n.locale.to_s.start_with?('th') ? 'th' : 'en' %>
+<% content_for(:html_title, t('jdp_signer_help.title')) %>
+<div class="sgn-root" lang="<%= lang %>">
+  <div class="sgn-layer sgn-sky" aria-hidden="true"></div>
+  <canvas class="sgn-water" aria-hidden="true"></canvas>
+  <img class="sgn-layer sgn-grain" src="/jdpools/grain.svg" alt="" aria-hidden="true" style="width: 100%; height: 100%;">
+
+  <div class="sgn-stage jdp-stage">
+    <div class="jdp-help">
+      <div class="sgn-card jdp-help-card">
+        <img class="sgn-logo sgn-rise" style="--sgn-i: 1" src="/logo-jdpools.png" alt="J.D.Pools" width="199" height="100">
+        <h1 class="sgn-title sgn-rise" style="--sgn-i: 2"><%= t('jdp_signer_help.title') %></h1>
+        <p class="sgn-lede sgn-rise jdp-help-lede" style="--sgn-i: 3"><%= t('jdp_signer_help.lede') %></p>
+
+        <h2 class="jdp-help-heading sgn-rise" style="--sgn-i: 4"><%= t('jdp_signer_help.steps_title') %></h2>
+        <ol class="jdp-help-steps sgn-rise" style="--sgn-i: 5">
+          <% Array.wrap(t('jdp_signer_help.steps')).each do |step| %>
+            <li><%= step %></li>
+          <% end %>
+        </ol>
+
+        <h2 class="jdp-help-heading sgn-rise" style="--sgn-i: 6"><%= t('jdp_signer_help.tips_title') %></h2>
+        <ul class="jdp-help-tips sgn-rise" style="--sgn-i: 7">
+          <% Array.wrap(t('jdp_signer_help.tips')).each do |tip| %>
+            <li><%= tip %></li>
+          <% end %>
+        </ul>
+
+        <p class="sgn-note sgn-rise" style="--sgn-i: 8"><%= t('jdp_signer_help.help') %></p>
+      </div>
+
+      <div class="sgn-rise" style="--sgn-i: 9">
+        <nav class="sgn-lang" aria-label="<%= t('jdp_language') %>">
+          <% [%w[en 🇬🇧 EN English], %w[th 🇹🇭 TH ไทย]].each do |code, flag, label, name| %>
+            <%= link_to url_for(request.query_parameters.merge(lang: code)), class: 'sgn-lang-option', title: name, lang: code, aria: { pressed: (code == lang).to_s } do %>
+              <span aria-hidden="true"><%= flag %></span><%= label %>
+            <% end %>
+          <% end %>
+        </nav>
+      </div>
+    </div>
+
+    <div class="sgn-attribution">
+      <%= render 'shared/powered_by' %>
+    </div>
+  </div>
+</div>

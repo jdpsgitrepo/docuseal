@@ -184,3 +184,67 @@ html, body { margin: 0; }
   width: 100%;
   height: 100%;
 }
+
+/* ---- Signer help (/help/signing): one wider card with numbered steps ---- */
+.jdp-help {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+.jdp-help-card { text-align: left; padding: 2.5rem 2.25rem 2rem; }
+.jdp-help-card .sgn-logo, .jdp-help-card .sgn-title { text-align: center; }
+.jdp-help-card .sgn-title { font-size: 1.875rem; }
+.jdp-help-lede { max-width: none; text-align: center; }
+.jdp-help-heading {
+  margin: 1.75rem 0 0.75rem;
+  font-family: var(--font-prompt, inherit);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--sgn-ink);
+}
+.jdp-help-steps {
+  counter-reset: jdp-step;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.jdp-help-steps li {
+  counter-increment: jdp-step;
+  display: grid;
+  grid-template-columns: 1.75rem 1fr;
+  gap: 0.75rem;
+  color: var(--sgn-ink);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+.jdp-help-steps li::before {
+  content: counter(jdp-step);
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: var(--sgn-cta);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+.jdp-help-tips {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.4rem;
+  color: var(--sgn-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.jdp-help-tips li::marker { color: var(--sgn-logo-cyan); }
+.jdp-help-card .sgn-note { text-align: center; }
