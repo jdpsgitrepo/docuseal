@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<%# JD Pools: full-screen sign-in lander, the jdpoolstech front-door design (see JDPOOLS.md). %>
+<html lang="<%= I18n.locale.to_s.start_with?('th') ? 'th' : 'en' %>">
+  <head>
+    <%= render 'layouts/head_tags' %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%= csrf_meta_tags %>
+    <% if canonical_url = content_for(:canonical_url) %>
+      <link href="<%= canonical_url %>" rel="canonical">
+    <% end %>
+    <link rel="stylesheet" href="/jdpools/fonts/fonts.css">
+    <link rel="stylesheet" href="/jdpools/signin.css">
+    <link rel="stylesheet" href="/jdpools/signin-extras.css">
+    <script src="/jdpools/water.js" defer></script>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

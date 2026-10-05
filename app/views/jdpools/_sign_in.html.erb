@@ -1,33 +1,90 @@
-<div class="max-w-md mx-auto px-4 pt-4 md:pt-12 pb-10">
-  <div class="bg-white rounded-box border border-base-300 shadow-sm px-6 py-10 md:px-10 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold"><%= t('sign_in') %></h1>
-    <p class="mt-3 text-base opacity-80"><%= t('jdp_landing_subtitle') %></p>
-    <%= render 'devise/sessions/omniauthable' %>
-    <p class="mt-5 text-sm opacity-70"><%= t('jdp_landing_signer_note') %></p>
-  </div>
-  <%= content_tag(:details, class: 'mt-8', open: params[:password].present?) do %>
-    <summary class="cursor-pointer text-center text-sm opacity-70 mb-4"><%= t('jdp_password_sign_in') %></summary>
-    <%= form_for(resource, as: resource_name, html: { class: 'space-y-6' }, data: { turbo: params[:redir].blank? }, url: session_path(resource_name)) do |f| %>
-      <%= render 'devise/sessions/hidden_fields' %>
-      <div class="space-y-2" dir="auto">
-        <div class="form-control">
-          <%= f.label :email, t(:email), class: 'label' %>
-          <%= f.email_field :email, autocomplete: 'email', class: 'base-input' %>
+<%# JD Pools sign-in lander: the jdpoolstech front-door design (collab's sign-in), plus e-Sign's admin sign-in and features. %>
+<% lang = I18n.locale.to_s.start_with?('th') ? 'th' : 'en' %>
+<div class="sgn-root" lang="<%= lang %>">
+  <div class="sgn-layer sgn-sky" aria-hidden="true"></div>
+  <canvas class="sgn-water" aria-hidden="true"></canvas>
+  <%# Grain above the water, as collab does; a static SVG because the filter tags are not valid ERB-checked HTML. %>
+  <img class="sgn-layer sgn-grain" src="/jdpools/grain.svg" alt="" aria-hidden="true" style="width: 100%; height: 100%;">
+
+  <div class="sgn-stage">
+    <div class="sgn-well">
+      <div class="sgn-card">
+        <img class="sgn-logo sgn-rise" style="--sgn-i: 1" src="/logo-jdpools.png" alt="J.D.Pools" width="199" height="100">
+        <h1 class="sgn-title sgn-rise" style="--sgn-i: 3"><%= t('jdp_app_name') %></h1>
+        <p class="sgn-lede sgn-rise" style="--sgn-i: 4"><%= t('jdp_landing_subtitle') %></p>
+
+        <% if flash[:alert].present? %>
+          <p class="sgn-alert" role="alert"><%= flash[:alert] %></p>
+        <% elsif flash[:notice].present? %>
+          <p class="sgn-alert" data-kind="notice" role="status"><%= flash[:notice] %></p>
+        <% end %>
+
+        <%= form_tag jdpools_entra_sign_in_path, method: :post, class: 'sgn-form sgn-rise', style: '--sgn-i: 5', data: { turbo: false, jdp_signin: true } do %>
+          <button type="submit" class="sgn-cta">
+            <svg width="17" height="17" viewBox="0 0 21 21" aria-hidden="true">
+              <rect x="0" y="0" width="9.5" height="9.5" fill="#f25022" />
+              <rect x="11.5" y="0" width="9.5" height="9.5" fill="#7fba00" />
+              <rect x="0" y="11.5" width="9.5" height="9.5" fill="#00a4ef" />
+              <rect x="11.5" y="11.5" width="9.5" height="9.5" fill="#ffb900" />
+            </svg>
+            <%= t('sign_in_with_microsoft') %>
+          </button>
+        <% end %>
+
+        <div class="sgn-note sgn-rise" style="--sgn-i: 6">
+          <p style="margin: 0">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="10.5" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8" />
+              <path d="M8 10.5V7.5a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg><%= t('jdp_secure_note') %>
+          </p>
+          <p class="sgn-signer-note"><%= t('jdp_landing_signer_note') %></p>
         </div>
-        <div class="form-control">
-          <%= f.label :password, t(:password), class: 'label' %>
-          <%= f.password_field :password, autocomplete: 'current-password', class: 'base-input' %>
-        </div>
+
+        <%= content_tag(:details, class: 'sgn-admin sgn-rise', style: '--sgn-i: 7', open: params[:password].present?) do %>
+          <summary><%= t('jdp_password_sign_in') %></summary>
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }) do |f| %>
+            <%= render 'devise/sessions/hidden_fields' %>
+            <div class="sgn-field">
+              <%= f.label :email, t(:email) %>
+              <%= f.email_field :email, autocomplete: 'email' %>
+            </div>
+            <div class="sgn-field">
+              <%= f.label :password, t(:password) %>
+              <%= f.password_field :password, autocomplete: 'current-password' %>
+            </div>
+            <%= f.button t(:sign_in), class: 'sgn-secondary' %>
+          <% end %>
+          <%= link_to t('forgot_your_password_'), new_password_path(resource_name), class: 'sgn-forgot' %>
+        <% end %>
       </div>
-      <div class="form-control">
-        <%= f.button button_title(title: t(:sign_in), disabled_with: t(:signing_in)), class: 'base-button' %>
+
+      <div class="sgn-rise" style="--sgn-i: 8">
+        <nav class="sgn-lang" aria-label="<%= t('jdp_language') %>">
+          <% [%w[en 🇬🇧 EN English], %w[th 🇹🇭 TH ไทย]].each do |code, flag, label, name| %>
+            <%= link_to url_for(request.query_parameters.merge(lang: code)), class: 'sgn-lang-option', title: name, lang: code, aria: { pressed: (code == lang).to_s } do %>
+              <span aria-hidden="true"><%= flag %></span><%= label %>
+            <% end %>
+          <% end %>
+        </nav>
       </div>
-    <% end %>
-    <div class="text-center mt-4">
-      <%= link_to t('forgot_your_password_'), new_password_path(resource_name), class: 'link link-hover text-sm' %>
     </div>
-  <% end %>
-  <div class="mt-10 text-sm opacity-70">
-    <%= render 'shared/powered_by' %>
   </div>
+
+  <section class="sgn-features" aria-label="<%= t('jdp_app_name') %>">
+    <div class="sgn-features-grid">
+      <% [%w[devices any_device], %w[shield_check secure], %w[world languages], %w[building jd_it]].each do |icon, key| %>
+        <div class="sgn-feature">
+          <span class="sgn-feature-icon"><%= svg_icon(icon) %></span>
+          <div>
+            <h2><%= t("jdp_feature_#{key}_title") %></h2>
+            <p><%= t("jdp_feature_#{key}_body") %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="sgn-attribution">
+      <%= render 'shared/powered_by' %>
+    </div>
+  </section>
 </div>

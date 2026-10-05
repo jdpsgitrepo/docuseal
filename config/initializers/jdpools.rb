@@ -18,6 +18,7 @@ Rails.application.config.to_prepare do
 
   DashboardController.prepend(Jdpools::LandingRedirect) unless DashboardController <= Jdpools::LandingRedirect
   SessionsController.prepend(Jdpools::LanguageCookie) unless SessionsController <= Jdpools::LanguageCookie
+  Jdpools::SignInLayout.install(SessionsController)
 
   SetupController.prepend(Jdpools::SetupGuard) unless SetupController <= Jdpools::SetupGuard
 

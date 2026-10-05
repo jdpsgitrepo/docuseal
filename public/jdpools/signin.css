@@ -1,0 +1,468 @@
+/* ============================================================================
+   Sign-in — a J.D. Pools card, on the deep end
+   ----------------------------------------------------------------------------
+   The front door to every JD Pools app. It is the one screen that is not
+   *inside* the product, so it is the one screen allowed to be atmosphere.
+
+   THE BRAND IS IN THE CARD, NOT THE WATER. The first pass got this backwards:
+   it put the card in translucent indigo glass under a light DM Sans wordmark,
+   which is the house style of every SaaS login built since about 2023 and the
+   house style of nothing at J.D. Pools. So the card here is the storefront's
+   own card — white, 20px radius — carrying the storefront's own type, and the
+   dark ground is only what it sits on.
+
+   Every value below is MEASURED, not chosen (see memory: jdpools-brand-measured,
+   and design-system/brand-tokens.css):
+
+     logo navy       #203a71   sampled from logo-jdpools.png (70.3% of its
+                               OPAQUE pixels). This file measured it first and
+                               used it only for the mark; as of 2026-09-18 it is
+                               the brand's navy everywhere — see SPEC.md §1.2.
+     logo cyan       #0095da   the bar under the wordmark — and the water
+     logo orange     #f6821f   the script. Now the brand's accent too; #f3940d,
+                               the storefront's orange, is retired.
+     display ink     #203a71   was #181d4e, the storefront's ink — retired
+     CTA hover       #0074ab   the cyan, dark enough to carry white (5.14:1);
+                               was #096bf0, one of four invented blues
+     focus ring      #0088c9   the cyan at >=3:1 (1.4.11)
+     muted text      #6a6f87
+     dark band       #090f1e   the dark ground, re-hued to the logo's 221°
+     white card      radius 20px, 0 0 10px -5px rgb(0 0 0 / .5)
+
+   ⚠️ HEADINGS ARE PROMPT 500 — medium, not bold, and NOT DM Sans. DM Sans is an
+   app-level addition that appears nowhere on jdpools.com; setting the wordmark
+   in it at weight 300 is most of why the first pass did not read as J.D. Pools.
+   Prompt is also the one face that carries Thai, so the Latin and Thai versions
+   of this screen are finally in the same voice.
+
+   Portability: this file declares its own tokens and its own box-sizing so it
+   can be copied unchanged into it-portal, learning, quotation-portal and
+   report-share, none of which load brand-tokens.css.
+   ============================================================================ */
+
+.sgn-root {
+  /* ⚠️ THAI HAS NO SPACES BETWEEN WORDS, so a Thai sentence is one unbreakable
+     run as far as min-content sizing is concerned. On a 375px screen the
+     secure-note line measured 330px and pushed the card 44px WIDER than the
+     gutters allowed — it went full-bleed and looked deliberate rather than
+     broken, which is why this is worth a comment. `anywhere`, not
+     `break-word`: only `anywhere` participates in min-content sizing, so only
+     `anywhere` stops text forcing its container wider. */
+  overflow-wrap: anywhere;
+
+  /* ---- measured brand values ---- */
+  /* ⚠️ LITERALS, not var(--brand-*), and that is deliberate: this stylesheet is
+     imported by the signin route alone and has to hold up before the app's own
+     token layer is in play. Keep them in step with design-system/brand-tokens.css
+     by hand — scripts/check-vendored-brand-tokens.mjs asserts all six copies of
+     THIS file stay byte-identical to each other, which is the failure mode that
+     actually bites here.
+
+     Note --sgn-logo-cyan and --sgn-logo-orange were already sampled from the
+     logo when this file was written. The rest of it was not, and carried the
+     retired #181D4E / #F3940D until 2026-09-18. */
+  --sgn-ground: #090f1e;
+  --sgn-ink: #203a71;
+  --sgn-muted: #6a6f87;
+  --sgn-line: #e6e8f0;
+  --sgn-cta: #203a71;
+  --sgn-cta-hover: #0074ab;
+  --sgn-logo-cyan: #0095da;
+  --sgn-logo-orange: #f6821f;
+  --sgn-ring: #0088c9;
+
+  position: fixed;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  isolation: isolate;
+  background: var(--sgn-ground);
+  color: #f7f8fc;
+}
+
+/* Self-contained on purpose. Tailwind's preflight already sets this app-wide,
+   but this file is written to be copied — and without it `width: 100%` on the
+   card resolves to a CONTENT box with the padding added on top, so the card
+   overhangs its own gutters by exactly 2 × padding. */
+.sgn-root,
+.sgn-root *,
+.sgn-root *::before,
+.sgn-root *::after {
+  box-sizing: border-box;
+}
+
+/* ---- 1. The deep end ----------------------------------------------------- */
+
+.sgn-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Depth, as one gradient: the surface up top where the light gets in, falling
+   to the storefront's own #0b0d26 at the floor. The cyan is the logo's bar,
+   heavily diluted — the water and the wordmark are the same blue. */
+.sgn-sky {
+  background:
+    radial-gradient(
+      108% 70% at 50% -18%,
+      rgb(0 149 218 / 0.3) 0%,
+      rgb(32 58 113 / 0.55) 26%,
+      rgb(13 17 48 / 0.35) 58%,
+      rgb(11 13 38 / 0) 78%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(18 26 66 / 0.85) 0%,
+      rgb(11 13 38 / 0.2) 42%,
+      rgb(6 7 24 / 0.9) 100%
+    );
+}
+
+/* The caustics canvas. Screen blend so the ridges add light rather than paint
+   over the ground; the shader itself fades them toward the floor and leaves a
+   calm well where the card sits (see WaterCanvas.tsx). */
+.sgn-water {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Film grain. Kills the plasticky look a pure-gradient dark screen always has;
+   4.5% is where it reads as material rather than as noise. Unanimated — moving
+   grain is a screen fault, not a texture. */
+.sgn-grain {
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* ---- 2. Stage ------------------------------------------------------------ */
+
+/* `min-height: 100%` on an inner wrapper rather than centring .sgn-root
+   itself: a centred flex/grid child that outgrows a scroll container has its
+   TOP clipped and becomes unreachable. This grows instead. */
+.sgn-stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  padding: 2.5rem 1.25rem;
+}
+
+.sgn-well {
+  display: flex;
+  width: 100%;
+  max-width: 25.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* ---- 3. The card — the storefront's, verbatim ---------------------------- */
+
+.sgn-card {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2.75rem 2.25rem 2rem;
+  /* 20px: measured off a jdpools.com white card. */
+  border-radius: 20px;
+  background: #ffffff;
+  color: var(--sgn-ink);
+  text-align: center;
+  /* The first shadow IS the storefront's. It is a contact shadow built for a
+     white card on a near-white tint, so on this ground it does nothing on its
+     own — the second and third do the lifting off the dark. */
+  box-shadow:
+    0 0 10px -5px rgb(0 0 0 / 0.5),
+    0 42px 80px -32px rgb(0 0 0 / 0.72),
+    0 10px 28px -14px rgb(0 0 0 / 0.5);
+}
+
+/* The logo is orange script sitting on a cyan bar. This is that construction,
+   turned into the card's cap — the one piece of ornament on the screen, and it
+   quotes the mark rather than inventing a decoration. */
+.sgn-card::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--sgn-logo-orange) 0%,
+    var(--sgn-logo-orange) 28%,
+    var(--sgn-logo-cyan) 72%,
+    var(--sgn-logo-cyan) 100%
+  );
+}
+
+/* ---- 4. Lockup ----------------------------------------------------------- */
+
+/* On a white card the logo is finally on the ground it was drawn for: its own
+   light outline disappears, so it needs no glow, no plaque and no apology. */
+/* The logo used to be followed by a "J.D. POOLS" eyebrow, which was saying in
+   small grey caps what the mark directly above it already said. With that gone
+   the logo sits straight on the title, so the gap below it tightens: 1.5rem was
+   spacing for a three-part stack and reads as a hole in a two-part one. */
+.sgn-logo {
+  display: block;
+  height: 3.5rem;
+  width: auto;
+  margin: 0 auto 1.125rem;
+}
+
+/* Prompt 500. Medium, never bold: the storefront sets its h1/h2 at 500 and that
+   restraint is most of the brand's voice. Sized below the site's h2 (42.5px)
+   because a card title is not a page title. */
+.sgn-title {
+  margin: 0;
+  font-family: var(--font-prompt, inherit);
+  font-size: 2.25rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--sgn-ink);
+}
+
+/* Thai sets its own leading: สระ stack above the baseline and วรรณยุกต์ above
+   those, so a Thai line needs more room than its Latin twin at the same size
+   (brand-tokens §1c measures the collision point at 1.268em). */
+.sgn-root:lang(th) .sgn-title {
+  line-height: 1.4;
+}
+
+.sgn-lede {
+  margin: 0.875rem auto 0;
+  max-width: 30ch;
+  color: var(--sgn-muted);
+  font-size: 0.875rem;
+  line-height: 1.75;
+}
+
+/* ---- 5. The one action --------------------------------------------------- */
+
+.sgn-form {
+  margin-top: 1.75rem;
+}
+
+/* The app's primary button, unchanged in colour from the one staff click today
+   — continuity matters more than novelty on a login. It hovers to the
+   storefront's CTA blue, the only place that blue appears here and the only
+   interaction on the screen. */
+.sgn-cta {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.9375rem 1.25rem;
+  border: 0;
+  border-radius: 10px; /* the storefront's control radius */
+  background: var(--sgn-cta);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  box-shadow: 0 6px 16px -8px rgb(32 58 113 / 0.7);
+  transition:
+    background-color 200ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sgn-cta:hover {
+  background: var(--sgn-cta-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px -10px rgb(9 107 240 / 0.6);
+}
+
+.sgn-cta:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px -6px rgb(32 58 113 / 0.7);
+}
+
+.sgn-cta:disabled {
+  cursor: default;
+  /* No dimming. The button is disabled for the half-second after a click, and
+     fading it there reads as "that did not work" at exactly the moment the
+     thing IS working. The spinner already says what is happening. */
+  transform: none;
+}
+
+/* Dependency-free so this file and SignInButton.tsx copy into every app
+   without dragging an icon library along with them. */
+.sgn-spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgb(255 255 255 / 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: sgn-spin 700ms linear infinite;
+}
+
+@keyframes sgn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Orange is the accent — focus rings and highlights — never a fill. */
+.sgn-cta:focus-visible {
+  outline: 2px solid var(--sgn-ring);
+  outline-offset: 3px;
+}
+
+/* Deliberately NOT a flex row. A bare text node inside a flex container is an
+   anonymous flex item, and those do not wrap — so the Thai string (half again
+   as long as the English) set the card's min-width on a phone. Inline flow
+   wraps; flex did not. */
+.sgn-note {
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--sgn-line);
+  color: var(--sgn-muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.sgn-note svg {
+  display: inline-block;
+  margin-inline-end: 0.35rem;
+  vertical-align: -0.05em;
+  opacity: 0.75;
+}
+
+/* ---- 5b. Language ---------------------------------------------------------
+   Sits BELOW the card, on the dark ground rather than on the white — changing
+   the language is about the screen, not about signing in, and putting it inside
+   the card would make it look like a step in the form. */
+
+.sgn-lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.08);
+  transition: opacity 150ms ease;
+}
+
+.sgn-lang[data-pending] {
+  opacity: 0.6;
+}
+
+.sgn-lang-option {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgb(255 255 255 / 0.7);
+  font: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.sgn-lang-option:hover:not([aria-pressed="true"]) {
+  color: #ffffff;
+}
+
+.sgn-lang-option[aria-pressed="true"] {
+  background: #ffffff;
+  color: var(--sgn-ink);
+}
+
+.sgn-lang-option:focus-visible {
+  outline: 2px solid var(--sgn-ring);
+  outline-offset: 2px;
+}
+
+/* ---- 6. Entrance --------------------------------------------------------- */
+
+/* One orchestrated load rather than scattered micro-interactions: the card
+   surfaces, then its contents rise through it in reading order. */
+.sgn-rise {
+  animation: sgn-rise 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--sgn-i, 0) * 70ms);
+}
+
+@keyframes sgn-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sgn-card {
+  animation: sgn-surface 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes sgn-surface {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- 7. Reduced motion --------------------------------------------------- */
+
+/* The water freezes too — WaterCanvas draws a single frame and never loops.
+   The composition still holds without any of it, which is the test a
+   decorative layer has to pass to be allowed on the page at all. */
+@media (prefers-reduced-motion: reduce) {
+  .sgn-rise,
+  .sgn-card {
+    animation: none;
+  }
+
+  .sgn-cta {
+    transition: none;
+  }
+
+  /* The spinner is exempt. It reports that a request is in flight, and a
+     frozen one says the opposite — that the page has hung. Slowed, not
+     stopped. */
+  .sgn-spinner {
+    animation-duration: 1.6s;
+  }
+}
+
+/* ---- 8. Narrow viewports ------------------------------------------------- */
+
+@media (max-width: 26rem) {
+  .sgn-card {
+    padding: 2.25rem 1.5rem 1.75rem;
+  }
+
+  .sgn-title {
+    font-size: 1.875rem;
+  }
+
+  .sgn-logo {
+    height: 3rem;
+  }
+}

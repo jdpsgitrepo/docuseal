@@ -1,0 +1,153 @@
+/* JD Pools e-Sign additions to the jdpoolstech sign-in design.
+   signin.css next to this file is a verbatim copy of apps/collab/src/app/signin/signin.css;
+   keep it that way and put DocuSeal-specific rules here. */
+
+html, body { margin: 0; }
+
+.sgn-root {
+  --font-prompt: 'Prompt';
+  font-family: 'DM Sans', 'Prompt', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The scene is position: fixed, so the stage grows with its content: the card fills the first
+   screen and the feature cards follow on scroll. */
+.sgn-stage { min-height: 100vh; }
+
+.sgn-alert {
+  margin: 1.25rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #fdecec;
+  color: #a61b1b;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.sgn-alert[data-kind="notice"] { background: #e8f4fb; color: #0b5a85; }
+
+.sgn-signer-note {
+  margin: 0.5rem 0 0;
+  color: var(--sgn-muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+/* ---- Admin sign-in: folded inside the card ---- */
+.sgn-admin {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--sgn-line);
+  text-align: left;
+}
+.sgn-admin summary {
+  cursor: pointer;
+  list-style: none;
+  text-align: center;
+  color: var(--sgn-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.sgn-admin summary::-webkit-details-marker { display: none; }
+.sgn-admin summary::after { content: ' ▾'; }
+.sgn-admin[open] summary::after { content: ' ▴'; }
+.sgn-admin summary:focus-visible { outline: 2px solid var(--sgn-ring); outline-offset: 3px; border-radius: 6px; }
+
+.sgn-admin form { margin-top: 1rem; display: grid; gap: 0.75rem; }
+.sgn-field { display: grid; gap: 0.3rem; }
+.sgn-field label { color: var(--sgn-ink); font-size: 0.8125rem; font-weight: 500; }
+.sgn-field input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #d8dbe8;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--sgn-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+.sgn-field input:focus { outline: 2px solid var(--sgn-ring); outline-offset: 1px; border-color: transparent; }
+.sgn-secondary {
+  margin-top: 0.25rem;
+  width: 100%;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--sgn-cta);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--sgn-cta);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.sgn-secondary:hover { background: #f4f5f9; }
+.sgn-admin .sgn-forgot { display: block; margin-top: 0.75rem; text-align: center; color: #0074ab; font-size: 0.75rem; }
+
+/* ---- What e-Sign is: below the fold, on the same water ---- */
+.sgn-features {
+  position: relative;
+  z-index: 1;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+}
+.sgn-features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 48rem) {
+  .sgn-features-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+}
+.sgn-feature {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.sgn-feature-icon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: rgb(0 149 218 / 0.18);
+  color: #7fd3f7;
+}
+.sgn-feature-icon svg { width: 1.5rem; height: 1.5rem; }
+.sgn-feature h2 {
+  margin: 0;
+  font-family: var(--font-prompt, inherit);
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+.sgn-feature p {
+  margin: 0.375rem 0 0;
+  color: rgb(247 248 252 / 0.72);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.sgn-root:lang(th) .sgn-feature h2 { line-height: 1.4; }
+
+.sgn-attribution {
+  margin-top: 2.5rem;
+  color: rgb(247 248 252 / 0.55);
+  font-size: 0.75rem;
+  text-align: center;
+}
+.sgn-attribution a { color: inherit; }
+
+.sgn-scroll-hint {
+  color: rgb(247 248 252 / 0.5);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* The toggle options are links here (no JS needed), where collab's are buttons. */
+.sgn-lang-option { text-decoration: none; }

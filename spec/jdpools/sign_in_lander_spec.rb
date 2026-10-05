@@ -27,6 +27,24 @@ RSpec.describe 'Sign-in lander', type: :request do
     expect(response.body).to include(I18n.t('powered_by'))
   end
 
+  it 'uses the jdpoolstech front-door layout, with admin sign-in inside the card and the features below' do
+    get '/sign_in'
+
+    expect(response.body).to include('class="sgn-root"', '/jdpools/signin.css', '/jdpools/water.js')
+    expect(response.body).to include('class="sgn-admin', I18n.t('jdp_password_sign_in'))
+    expect(response.body).to include(I18n.t('jdp_feature_secure_title'))
+    expect(response.body).not_to include('id="account_settings_button"')
+  end
+
+  it 'shows a refused sign-in inside the card' do
+    create(:user, email: 'someone@jdpools.com', password: 'correct horse')
+
+    post '/sign_in', params: { user: { email: 'someone@jdpools.com', password: 'correct horse' } }
+    follow_redirect!
+
+    expect(response.body).to include('sgn-alert', ERB::Util.html_escape(I18n.t('devise.failure.jdp_use_microsoft')))
+  end
+
   it 'switches to Thai and remembers it' do
     get '/sign_in', params: { lang: 'th' }
 
