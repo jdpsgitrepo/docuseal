@@ -21,6 +21,7 @@ Our changes live on the `jdpools` branch. `master` tracks upstream untouched.
 | Password login restricted to break-glass accounts | — | `lib/jdpools/password_login_guard.rb` |
 | Thai signing page (follows the signer's phone language) | Not available (14 languages, no Thai) | `config/locales/th.yml`, `config/locales/jdpools.yml`, `app/javascript/submission_form/i18n_th.js` |
 | Automatic email reminders | Pro only (settings form saves, nothing sends) | `app/jobs/jdpools/submitter_reminder_job.rb` |
+| Thai in generated PDFs (tone marks stacked correctly; audit trail no longer drops Thai) | HexaPDF does no shaping; audit trail's Helvetica has no Thai | `lib/jdpools/thai_pdf_text.rb`, `config/jdpools/fonts/` (Laksaman, TLWG, GPLv2+ with font exception) |
 | Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
 | Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
 
@@ -81,11 +82,6 @@ Graph permission `User.Read`, app roles `DocuSeal.Admin` and `DocuSeal.Sender`, 
 
 ## Known gaps
 
-- **Thai text typed into fields renders with stacked tone marks colliding** in the signed PDF
-  (ที่ shows as ที, ตั้ง with ้ beside ั). HexaPDF does no complex-script shaping. Single marks
-  (น้ำ, จ้าง) and everything in the browser are fine; drawn signatures are unaffected.
-  Until fixed, keep Thai wording in the source document and use fields for signatures, dates,
-  initials and checkboxes.
 - Members still see the **Account** and **Users** links in Settings (upstream shows them to every
   user). Account refuses them; Users lists only themselves.
 

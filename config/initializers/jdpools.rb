@@ -12,6 +12,10 @@ Rails.application.config.to_prepare do
     PasswordsController.prepend(Jdpools::PasswordLoginGuard::PasswordsControllerPatch)
   end
 
+  unless HexaPDF::Layout::TextFragment.singleton_class <= Jdpools::ThaiPdfText::TextFragmentPatch
+    HexaPDF::Layout::TextFragment.singleton_class.prepend(Jdpools::ThaiPdfText::TextFragmentPatch)
+  end
+
   SetupController.prepend(Jdpools::SetupGuard) unless SetupController <= Jdpools::SetupGuard
 
   Accounts.singleton_class.prepend(Jdpools::AccountsPatch) unless Accounts.singleton_class <= Jdpools::AccountsPatch
