@@ -71,6 +71,7 @@ submission is archived or expired, or the invitation was re-sent since it was sc
 | `S3_ATTACHMENTS_BUCKET`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_ENDPOINT` | Railway bucket for documents (upstream's S3 settings) |
 | `JDP_PASSWORD_LOGIN_EMAILS` | Comma-separated break-glass emails allowed to use a password |
 | `SESSION_REMEMBER_DAYS` | Set to `1` |
+| `JDP_SETUP_TOKEN` | First-run `/setup` answers 404 unless opened once with `?token=<value>`. Remove after setup. |
 | `SECRET_KEY_BASE` | Set explicitly. Upstream otherwise writes one to `/data/docuseal/.env`, which a redeploy without a volume loses, logging everyone out and breaking encrypted settings. |
 | `APP_URL` | Public URL, e.g. `https://sign.jdpools.com`. Builds the Entra redirect URI and every emailed link. |
 

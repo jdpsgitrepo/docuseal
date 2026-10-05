@@ -12,6 +12,8 @@ Rails.application.config.to_prepare do
     PasswordsController.prepend(Jdpools::PasswordLoginGuard::PasswordsControllerPatch)
   end
 
+  SetupController.prepend(Jdpools::SetupGuard) unless SetupController <= Jdpools::SetupGuard
+
   Accounts.singleton_class.prepend(Jdpools::AccountsPatch) unless Accounts.singleton_class <= Jdpools::AccountsPatch
 
   unless SendSubmitterInvitationEmailJob <= Jdpools::ReminderScheduling
