@@ -22,6 +22,7 @@ Our changes live on the `jdpools` branch. `master` tracks upstream untouched.
 | Thai signing page (follows the signer's phone language) | Not available (14 languages, no Thai) | `config/locales/th.yml`, `config/locales/jdpools.yml`, `app/javascript/submission_form/i18n_th.js` |
 | Automatic email reminders | Pro only (settings form saves, nothing sends) | `app/jobs/jdpools/submitter_reminder_job.rb` |
 | Thai in generated PDFs (tone marks stacked correctly; audit trail no longer drops Thai) | HexaPDF does no shaping; audit trail's Helvetica has no Thai | `lib/jdpools/thai_pdf_text.rb`, `config/jdpools/fonts/` (Laksaman, TLWG, GPLv2+ with font exception) |
+| Sign-in lander at `/` with EN / ไทย toggle (remembered in `jdp_lang` cookie) | DocuSeal marketing page | `lib/jdpools/landing_redirect.rb`, `lib/jdpools/language_cookie.rb`, `app/views/jdpools/` |
 | J.D. Pools branding (colours, logo, favicon, titles) | Pro only (custom logo) | DaisyUI theme in `tailwind.config.js`, `public/jdpools-logo.png`, favicons |
 | Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
 | Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
@@ -101,7 +102,8 @@ Upstream lands several commits a day. Rules that keep merges cheap:
 | File | Change |
 |---|---|
 | `app/views/devise/sessions/_omniauthable.html.erb` | Empty upstream; renders the Microsoft button |
-| `app/views/devise/sessions/new.html.erb` | Microsoft button first; password form folded into a `<details>` when SSO is on |
+| `app/views/devise/sessions/new.html.erb` | With SSO on, renders `jdpools/_sign_in` (the lander: Microsoft button, signer note, folded IT-admin password form); upstream markup kept in the else branch |
+| `app/views/shared/_navbar.html.erb` | EN / ไทย toggle (`jdpools/_language_toggle`) on the sign-in page, where upstream's Sign In link would be |
 | `app/views/notifications_settings/_reminder_banner.html.erb` | Drops the "Unlock with Pro" banner |
 | `app/views/users/_role_select.html.erb` | Role shown read-only: it is managed in Entra |
 | `app/javascript/submission_form/i18n.js` | Registers the `th` strings |

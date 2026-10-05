@@ -1,0 +1,7 @@
+<%# JD Pools: EN / ไทย switch for the sign-in lander. Choice is kept in the jdp_lang cookie (Jdpools::LanguageCookie). %>
+<% current = I18n.locale.to_s.start_with?('th') ? 'th' : 'en' %>
+<nav class="flex items-center rounded-full border border-base-300 bg-white p-1 text-sm font-medium" aria-label="<%= t('jdp_language') %>">
+  <% { 'en' => 'EN', 'th' => 'ไทย' }.each do |code, label| %>
+    <%= link_to label, url_for(request.query_parameters.merge(lang: code)), class: "px-3 py-1 rounded-full #{code == current ? 'bg-neutral text-neutral-content' : 'opacity-70 hover:opacity-100'}", lang: code, aria: { current: code == current ? 'true' : nil } %>
+  <% end %>
+</nav>

@@ -1,0 +1,33 @@
+<div class="max-w-md mx-auto px-4 pt-4 md:pt-12 pb-10">
+  <div class="bg-white rounded-box border border-base-300 shadow-sm px-6 py-10 md:px-10 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold"><%= t('sign_in') %></h1>
+    <p class="mt-3 text-base opacity-80"><%= t('jdp_landing_subtitle') %></p>
+    <%= render 'devise/sessions/omniauthable' %>
+    <p class="mt-5 text-sm opacity-70"><%= t('jdp_landing_signer_note') %></p>
+  </div>
+  <%= content_tag(:details, class: 'mt-8', open: params[:password].present?) do %>
+    <summary class="cursor-pointer text-center text-sm opacity-70 mb-4"><%= t('jdp_password_sign_in') %></summary>
+    <%= form_for(resource, as: resource_name, html: { class: 'space-y-6' }, data: { turbo: params[:redir].blank? }, url: session_path(resource_name)) do |f| %>
+      <%= render 'devise/sessions/hidden_fields' %>
+      <div class="space-y-2" dir="auto">
+        <div class="form-control">
+          <%= f.label :email, t(:email), class: 'label' %>
+          <%= f.email_field :email, autocomplete: 'email', class: 'base-input' %>
+        </div>
+        <div class="form-control">
+          <%= f.label :password, t(:password), class: 'label' %>
+          <%= f.password_field :password, autocomplete: 'current-password', class: 'base-input' %>
+        </div>
+      </div>
+      <div class="form-control">
+        <%= f.button button_title(title: t(:sign_in), disabled_with: t(:signing_in)), class: 'base-button' %>
+      </div>
+    <% end %>
+    <div class="text-center mt-4">
+      <%= link_to t('forgot_your_password_'), new_password_path(resource_name), class: 'link link-hover text-sm' %>
+    </div>
+  <% end %>
+  <div class="mt-10 text-sm opacity-70">
+    <%= render 'shared/powered_by' %>
+  </div>
+</div>

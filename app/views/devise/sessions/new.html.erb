@@ -1,13 +1,11 @@
 <%= content_for(:canonical_url, new_user_session_url) %>
+<%# JD Pools: with Microsoft sign-in on, this page is the lander (JDPOOLS.md). Upstream page below otherwise. %>
+<% if Jdpools.entra_enabled? %>
+<%= render 'jdpools/sign_in' %>
+<% else %>
 <div class="max-w-lg mx-auto px-2">
   <%= render 'devise/shared/select_server' if Docuseal.multitenant? %>
   <h1 class="text-4xl font-bold text-center mt-8"><%= t('sign_in') %></h1>
-  <%# JD Pools: Microsoft first; the password form folds away for break-glass use (JDPOOLS.md). %>
-  <%= render 'omniauthable' %>
-  <%= content_tag(Jdpools.entra_enabled? ? :details : :div, class: Jdpools.entra_enabled? ? 'mt-10' : nil, open: Jdpools.entra_enabled? && params[:password].present?) do %>
-  <% if Jdpools.entra_enabled? %>
-    <summary class="cursor-pointer text-center text-sm opacity-70 mb-4"><%= t('jdp_password_sign_in') %></summary>
-  <% end %>
   <%= form_for(resource, as: resource_name, html: { class: 'space-y-6' }, data: { turbo: params[:redir].blank? }, url: session_path(resource_name)) do |f| %>
     <%= render 'hidden_fields' %>
     <div class="space-y-2" dir="auto">
@@ -24,7 +22,8 @@
       <%= f.button button_title(title: t(:sign_in), disabled_with: t(:signing_in)), class: 'base-button' %>
     </div>
   <% end %>
+  <%= render 'omniauthable' %>
   <%= render 'extra_links' %>
   <%= render 'devise/shared/links' %>
-  <% end %>
 </div>
+<% end %>

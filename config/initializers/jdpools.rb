@@ -16,6 +16,9 @@ Rails.application.config.to_prepare do
     HexaPDF::Layout::TextFragment.singleton_class.prepend(Jdpools::ThaiPdfText::TextFragmentPatch)
   end
 
+  DashboardController.prepend(Jdpools::LandingRedirect) unless DashboardController <= Jdpools::LandingRedirect
+  SessionsController.prepend(Jdpools::LanguageCookie) unless SessionsController <= Jdpools::LanguageCookie
+
   SetupController.prepend(Jdpools::SetupGuard) unless SetupController <= Jdpools::SetupGuard
 
   Accounts.singleton_class.prepend(Jdpools::AccountsPatch) unless Accounts.singleton_class <= Jdpools::AccountsPatch
