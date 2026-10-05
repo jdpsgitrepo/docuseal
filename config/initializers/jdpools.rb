@@ -12,6 +12,8 @@ Rails.application.config.to_prepare do
     PasswordsController.prepend(Jdpools::PasswordLoginGuard::PasswordsControllerPatch)
   end
 
+  Accounts.singleton_class.prepend(Jdpools::AccountsPatch) unless Accounts.singleton_class <= Jdpools::AccountsPatch
+
   unless SendSubmitterInvitationEmailJob <= Jdpools::ReminderScheduling
     SendSubmitterInvitationEmailJob.prepend(Jdpools::ReminderScheduling)
   end
@@ -25,6 +27,19 @@ Warden::Manager.after_set_user except: :fetch do |user, warden, options|
   scope = options[:scope]
   warden.logout(scope)
   throw :warden, scope:, message: Jdpools::PasswordLoginGuard::FAILURE_MESSAGE
+end
+
+# Mail through Microsoft Graph instead of SMTP (see Jdpools::GraphMailDelivery). Upstream's
+# ActionMailerConfigsInterceptor rewrites From to SMTP_FROM whenever a delivery method is configured,
+# so point that at the Graph mailbox too.
+# Checked on ENV rather than the class so boot does not autoload reloadable code.
+if Rails.env.production? && ENV['JDP_GRAPH_MAIL_FROM'].present? && ENV['SMTP_ADDRESS'].blank?
+  ENV['SMTP_FROM'] ||= ENV.fetch('JDP_GRAPH_MAIL_FROM').strip.downcase
+  Rails.application.config.action_mailer.delivery_method = :jdp_graph
+
+  ActiveSupport.on_load(:action_mailer) do
+    ActionMailer::Base.add_delivery_method(:jdp_graph, Jdpools::GraphMailDelivery)
+  end
 end
 
 # Upstream's routes.rb ends with run_load_hooks(:routes), so these append without editing it.

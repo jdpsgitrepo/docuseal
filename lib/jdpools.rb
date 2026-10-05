@@ -14,7 +14,7 @@ module Jdpools
   module_function
 
   def entra_enabled?
-    entra_tenant_id.present? && entra_client_id.present? && entra_client_secret.present?
+    entra_tenant_id.present? && entra_client_id.present? && Jdpools::EntraClientAuth.configured?
   end
 
   def entra_tenant_id

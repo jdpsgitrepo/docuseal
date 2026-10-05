@@ -61,16 +61,19 @@ module Jdpools
     end
 
     def exchange_code(code:, redirect_uri:, code_verifier:)
-      response = http.post("#{tenant_url}/oauth2/v2.0/token") do |req|
+      token_url = "#{tenant_url}/oauth2/v2.0/token"
+
+      response = http.post(token_url) do |req|
         req.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         req.body = URI.encode_www_form(
-          client_id: Jdpools.entra_client_id,
-          client_secret: Jdpools.entra_client_secret,
-          grant_type: 'authorization_code',
-          code:,
-          redirect_uri:,
-          code_verifier:,
-          scope: SCOPE
+          {
+            client_id: Jdpools.entra_client_id,
+            grant_type: 'authorization_code',
+            code:,
+            redirect_uri:,
+            code_verifier:,
+            scope: SCOPE
+          }.merge(EntraClientAuth.params(token_url))
         )
       end
 

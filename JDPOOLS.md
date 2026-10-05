@@ -21,6 +21,8 @@ Our changes live on the `jdpools` branch. `master` tracks upstream untouched.
 | Password login restricted to break-glass accounts | — | `lib/jdpools/password_login_guard.rb` |
 | Thai signing page (follows the signer's phone language) | Not available (14 languages, no Thai) | `config/locales/th.yml`, `config/locales/jdpools.yml`, `app/javascript/submission_form/i18n_th.js` |
 | Automatic email reminders | Pro only (settings form saves, nothing sends) | `app/jobs/jdpools/submitter_reminder_job.rb` |
+| Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
+| Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
 
 Thai or bilingual email wording needs no code: Settings → Personalization edits the invitation and
 completion emails in the open-source build.
@@ -63,7 +65,10 @@ submission is archived or expired, or the invitation was re-sent since it was sc
 |---|---|
 | `JDP_ENTRA_TENANT_ID` | Directory (tenant) ID. SSO is off when unset. |
 | `JDP_ENTRA_CLIENT_ID` | App registration client ID |
-| `JDP_ENTRA_CLIENT_SECRET` | App registration client secret |
+| `JDP_ENTRA_PRIVATE_KEY` / `JDP_ENTRA_CERTIFICATE` | PEM key pair; the certificate (public half only) is uploaded to the app registration. Preferred. |
+| `JDP_ENTRA_CLIENT_SECRET` | Fallback when no certificate is set |
+| `JDP_GRAPH_MAIL_FROM` | Mailbox all email is sent from through Microsoft Graph (`it-service@jdpools.com`). Needs the `Mail.Send` application permission. |
+| `S3_ATTACHMENTS_BUCKET`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_ENDPOINT` | Railway bucket for documents (upstream's S3 settings) |
 | `JDP_PASSWORD_LOGIN_EMAILS` | Comma-separated break-glass emails allowed to use a password |
 | `SESSION_REMEMBER_DAYS` | Set to `1` |
 | `SECRET_KEY_BASE` | Set explicitly. Upstream otherwise writes one to `/data/docuseal/.env`, which a redeploy without a volume loses, logging everyone out and breaking encrypted settings. |
