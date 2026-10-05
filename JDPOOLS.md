@@ -6,11 +6,26 @@ jdpoolstech apps.
 
 Our changes live on the `jdpools` branch. `master` tracks upstream untouched.
 
-## Licence obligations (AGPLv3 + section 7(b))
+## Licence obligations (AGPLv3 + section 7(b)) — do not regress
 
-- This repository stays **public**. Anyone who uses the running service (staff and external signers)
-  is entitled to the modified source; the public fork is how we meet that.
-- The "Powered by DocuSeal" attribution stays in the UI. Do not remove it.
+DocuSeal is AGPLv3 with one additional term. Modifying, rebranding, self-hosting and re-implementing
+Pro features in our own code are all allowed. Two obligations must hold on every deploy, and
+`spec/jdpools/licence_requirements_spec.rb` fails if either breaks:
+
+1. **Attribution (7(b)).** The original DocuSeal attribution stays in every interactive UI. It is
+   `shared/_powered_by` ("Powered by DocuSeal"): on signing and completion pages, the sign-in lander,
+   and (our addition) a footer on every staff page in `layouts/application`. Emails keep
+   "Sent using DocuSeal". Replacing the DocuSeal logo/name in headers with J.D. Pools branding is fine;
+   removing the "Powered by" line is not.
+2. **Source offer (section 13).** Everyone who uses the service over the network, external signers
+   included, must be offered this modified version's source. The "Source code" link in
+   `shared/_powered_by` points at `Jdpools.source_url` (`JDP_SOURCE_URL`, default
+   `https://github.com/jdpsgitrepo/docuseal`). Railway deploys from that repo, so the published source
+   is what runs.
+
+The repo is public. It could be private only if the source were served some other way (e.g. a
+download from the app), and anyone who receives it may redistribute it, so private would not mean
+confidential. Never commit secrets: credentials and IDs live in Railway variables.
 
 ## What we added
 
@@ -111,6 +126,8 @@ Upstream lands several commits a day. Rules that keep merges cheap:
 |---|---|
 | `app/views/devise/sessions/_omniauthable.html.erb` | Empty upstream; renders the Microsoft button |
 | `app/views/devise/sessions/new.html.erb` | With SSO on, renders `jdpools/_sign_in` (the lander: Microsoft button, signer note, folded IT-admin password form); upstream markup kept in the else branch |
+| `app/views/shared/_powered_by.html.erb` | "Source code" link to our fork (AGPL section 13) |
+| `app/views/layouts/application.html.erb` | Attribution + source footer on staff pages (7(b), section 13) |
 | `app/views/notifications_settings/_reminder_banner.html.erb` | Drops the "Unlock with Pro" banner |
 | `app/views/users/_role_select.html.erb` | Role shown read-only: it is managed in Entra |
 | `app/javascript/submission_form/i18n.js` | Registers the `th` strings |

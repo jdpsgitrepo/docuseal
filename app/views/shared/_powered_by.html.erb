@@ -10,4 +10,6 @@
     <%= t('powered_by') %>
   <% end %>
   <a href="<%= Docuseal::PRODUCT_URL %><%= local_assigns[:link_path] %>" class="underline"><%= Docuseal.product_name %></a> - <%= t('open_source_documents_software') %>
+  <%# JD Pools: AGPLv3 section 13 requires offering this modified version's source to every user. Do not remove. %>
+  · <a href="<%= Jdpools.source_url %>" class="underline" target="_blank" rel="noopener"><%= t('jdp_source_code') %></a>
 </div>

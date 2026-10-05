@@ -1,6 +1,7 @@
 # JD Pools fork strings (see JDPOOLS.md). Other locales fall back to en.
 en:
   language_th: "ภาษาไทย"
+  jdp_source_code: "Source code"
   jdp_app_name: "JD e-Sign"
   jdp_secure_note: "Single sign-on · Authorised JD Pools staff only"
   jdp_language: "Language"
@@ -22,6 +23,7 @@ en:
       jdp_use_microsoft: "Use Sign in with Microsoft. Password sign-in is for IT break-glass accounts only."
 th:
   language_th: "ภาษาไทย"
+  jdp_source_code: "ซอร์สโค้ด"
   jdp_app_name: "JD e-Sign"
   jdp_secure_note: "เข้าสู่ระบบแบบรวมศูนย์ · เฉพาะพนักงาน JD Pools ที่ได้รับสิทธิ์"
   jdp_language: "ภาษา"

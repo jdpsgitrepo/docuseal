@@ -37,6 +37,8 @@
     <div class="max-w-6xl mx-auto px-4 md:px-2 mb-8">
       <%= yield %>
     </div>
+    <%# JD Pools: DocuSeal attribution + source link on every in-app page (licence requirement, JDPOOLS.md). %>
+    <footer class="max-w-6xl mx-auto px-4 md:px-2 pb-6 text-xs opacity-60"><%= render 'shared/powered_by' %></footer>
     <%= render 'shared/body_scripts' %>
   </body>
 </html>

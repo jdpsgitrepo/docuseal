@@ -11,7 +11,7 @@ html, body { margin: 0; }
 
 /* The scene is position: fixed, so the stage grows with its content: the card fills the first
    screen and the feature cards follow on scroll. */
-.sgn-stage { min-height: 100vh; }
+.sgn-stage { min-height: 88vh; }
 
 .sgn-alert {
   margin: 1.25rem 0 0;
@@ -151,3 +151,14 @@ html, body { margin: 0; }
 
 /* The toggle options are links here (no JS needed), where collab's are buttons. */
 .sgn-lang-option { text-decoration: none; }
+
+/* The water, sky and grain cover the VIEWPORT, not the first screen of the scroll container:
+   absolute layers inside the scrolling .sgn-root stop at its first screen, which left the feature
+   cards on a plain dark band. Fixed layers stay behind everything as the page scrolls. */
+.sgn-root > .sgn-layer,
+.sgn-root > .sgn-water {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}

@@ -41,6 +41,11 @@ module Jdpools
     email.to_s.strip.downcase.in?(password_login_emails)
   end
 
+  # Where users can get this modified version's source (AGPLv3 section 13).
+  def source_url
+    ENV.fetch('JDP_SOURCE_URL', 'https://github.com/jdpsgitrepo/docuseal')
+  end
+
   def member?(user)
     user&.role == MEMBER_ROLE
   end
