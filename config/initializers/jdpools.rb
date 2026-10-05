@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+# JD Pools fork wiring. Everything is attached from here so upstream files stay untouched;
+# see JDPOOLS.md.
+
+Rails.application.config.i18n.available_locales += %i[th]
+
+Rails.application.config.to_prepare do
+  Ability.prepend(Jdpools::AbilityScoping) unless Ability <= Jdpools::AbilityScoping
+
+  unless PasswordsController <= Jdpools::PasswordLoginGuard::PasswordsControllerPatch
+    PasswordsController.prepend(Jdpools::PasswordLoginGuard::PasswordsControllerPatch)
+  end
+
+  unless SendSubmitterInvitationEmailJob <= Jdpools::ReminderScheduling
+    SendSubmitterInvitationEmailJob.prepend(Jdpools::ReminderScheduling)
+  end
+end
+
+# Registered once (not in to_prepare, which re-runs on every code reload in development). The hook
+# body resolves Jdpools::PasswordLoginGuard at call time, so it always sees the reloaded module.
+Warden::Manager.after_set_user except: :fetch do |user, warden, options|
+  next if Jdpools::PasswordLoginGuard.allowed?(user, warden, options)
+
+  scope = options[:scope]
+  warden.logout(scope)
+  throw :warden, scope:, message: Jdpools::PasswordLoginGuard::FAILURE_MESSAGE
+end
+
+# Upstream's routes.rb ends with run_load_hooks(:routes), so these append without editing it.
+ActiveSupport.on_load(:routes) do
+  post '/auth/entra' => 'jdpools/entra_sessions#create', as: :jdpools_entra_sign_in
+  get '/auth/entra/callback' => 'jdpools/entra_sessions#callback', as: :jdpools_entra_callback
+end

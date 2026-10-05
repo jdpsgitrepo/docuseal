@@ -1,3 +1,5 @@
+import th from './i18n_th' // JD Pools
+
 const en = {
   step: 'Step',
   form_progress: 'Form progress',
@@ -1664,6 +1666,6 @@ const ja = {
   enter_screen_reader_mode: 'スクリーンリーダーモードを有効にする'
 }
 
-const i18n = { en, es, it, de, fr, pl, uk, cs, pt, he, nl, ar, ko, ja }
+const i18n = { en, es, it, de, fr, pl, uk, cs, pt, he, nl, ar, ko, ja, th }
 
 export default i18n

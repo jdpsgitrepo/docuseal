@@ -1,3 +1,10 @@
+<% if Jdpools.entra_enabled? %>
+  <%# JD Pools: role comes from the Entra app role and is re-synced at every sign-in. %>
+  <div class="form-control">
+    <%= f.label :role, class: 'label' %>
+    <p class="text-sm"><%= t('jdp_role_managed_in_entra') %></p>
+  </div>
+<% else %>
 <div class="form-control">
   <%= f.label :role, class: 'label' %>
   <%= f.select :role, nil, {}, class: 'base-select' do %>
@@ -20,3 +27,4 @@
     </a>
   <% end %>
 </div>
+<% end %>

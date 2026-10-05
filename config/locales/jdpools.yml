@@ -1,0 +1,17 @@
+# JD Pools fork strings (see JDPOOLS.md). Other locales fall back to en.
+en:
+  language_th: "ภาษาไทย"
+  jdp_password_sign_in: "IT admin password sign-in"
+  jdp_entra_sign_in_failed: "Microsoft sign-in did not complete. If this keeps happening, ask IT to check that you have access to DocuSeal."
+  jdp_role_managed_in_entra: "Managed in Microsoft Entra: assign the DocuSeal.Admin or DocuSeal.Sender app role."
+  devise:
+    failure:
+      jdp_use_microsoft: "Use Sign in with Microsoft. Password sign-in is for IT break-glass accounts only."
+th:
+  language_th: "ภาษาไทย"
+  jdp_password_sign_in: "เข้าสู่ระบบด้วยรหัสผ่าน (ผู้ดูแลระบบ IT)"
+  jdp_entra_sign_in_failed: "เข้าสู่ระบบด้วย Microsoft ไม่สำเร็จ หากยังเกิดขึ้นอีก กรุณาให้ฝ่าย IT ตรวจสอบสิทธิ์การใช้งาน DocuSeal ของคุณ"
+  jdp_role_managed_in_entra: "จัดการใน Microsoft Entra: กำหนดบทบาท DocuSeal.Admin หรือ DocuSeal.Sender"
+  devise:
+    failure:
+      jdp_use_microsoft: "กรุณาเข้าสู่ระบบด้วย Microsoft รหัสผ่านใช้ได้เฉพาะบัญชีฉุกเฉินของฝ่าย IT"

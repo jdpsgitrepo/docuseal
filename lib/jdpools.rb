@@ -1,0 +1,47 @@
+# frozen_string_literal: true
+
+# JD Pools additions to DocuSeal. See JDPOOLS.md for the design and the list of
+# upstream files this fork edits.
+module Jdpools
+  MEMBER_ROLE = 'member'
+
+  DEPARTMENT_CONFIG_KEY = 'jdp_department'
+  ENTRA_OID_CONFIG_KEY = 'jdp_entra_oid'
+
+  ENTRA_ADMIN_APP_ROLE = 'DocuSeal.Admin'
+  ENTRA_SENDER_APP_ROLE = 'DocuSeal.Sender'
+
+  module_function
+
+  def entra_enabled?
+    entra_tenant_id.present? && entra_client_id.present? && entra_client_secret.present?
+  end
+
+  def entra_tenant_id
+    ENV.fetch('JDP_ENTRA_TENANT_ID', nil)
+  end
+
+  def entra_client_id
+    ENV.fetch('JDP_ENTRA_CLIENT_ID', nil)
+  end
+
+  def entra_client_secret
+    ENV.fetch('JDP_ENTRA_CLIENT_SECRET', nil)
+  end
+
+  def password_login_emails
+    ENV.fetch('JDP_PASSWORD_LOGIN_EMAILS', '').split(',').map { |e| e.strip.downcase }.compact_blank
+  end
+
+  # With Entra on, only break-glass addresses may use a password. With Entra off
+  # (local development, or before the app registration exists) passwords work as upstream.
+  def password_login_allowed?(email)
+    return true unless entra_enabled?
+
+    email.to_s.strip.downcase.in?(password_login_emails)
+  end
+
+  def member?(user)
+    user&.role == MEMBER_ROLE
+  end
+end
