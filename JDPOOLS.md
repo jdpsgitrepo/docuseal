@@ -22,6 +22,7 @@ Our changes live on the `jdpools` branch. `master` tracks upstream untouched.
 | Thai signing page (follows the signer's phone language) | Not available (14 languages, no Thai) | `config/locales/th.yml`, `config/locales/jdpools.yml`, `app/javascript/submission_form/i18n_th.js` |
 | Automatic email reminders | Pro only (settings form saves, nothing sends) | `app/jobs/jdpools/submitter_reminder_job.rb` |
 | Thai in generated PDFs (tone marks stacked correctly; audit trail no longer drops Thai) | HexaPDF does no shaping; audit trail's Helvetica has no Thai | `lib/jdpools/thai_pdf_text.rb`, `config/jdpools/fonts/` (Laksaman, TLWG, GPLv2+ with font exception) |
+| J.D. Pools branding (colours, logo, favicon, titles) | Pro only (custom logo) | DaisyUI theme in `tailwind.config.js`, `public/jdpools-logo.png`, favicons |
 | Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
 | Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
 
@@ -104,6 +105,14 @@ Upstream lands several commits a day. Rules that keep merges cheap:
 | `app/views/notifications_settings/_reminder_banner.html.erb` | Drops the "Unlock with Pro" banner |
 | `app/views/users/_role_select.html.erb` | Role shown read-only: it is managed in Entra |
 | `app/javascript/submission_form/i18n.js` | Registers the `th` strings |
+| `tailwind.config.js`, `tailwind.dynamic.config.js` | Theme colours/radii from jdpoolstech `design-system/brand-tokens.css` |
+| `app/javascript/application.js`, `app/views/shared/_meta.html.erb` | Background / theme-color hex; page titles, og:site_name |
+| `app/views/shared/_logo.html.erb`, `app/javascript/template_builder/logo.vue` | J.D. Pools logo image in place of the DocuSeal mark |
+| `app/views/shared/_title.html.erb`, `app/views/shared/_html_title.html.erb`, `app/views/layouts/_head_tags.html.erb`, `app/views/{submit,start}_form/_docuseal_logo.html.erb` | "e-Sign" / "J.D. Pools e-Sign" in headers and titles |
+| `public/favicon*`, `public/apple-*` | J.D. Pools favicons (from design-system/favicon) |
+
+The "Powered by DocuSeal" footers (`shared/_powered_by`, `shared/_attribution`, `shared/_email_attribution`) are
+deliberately untouched: section 7(b) of the licence requires that attribution to stay.
 
 ### Syncing upstream
 
