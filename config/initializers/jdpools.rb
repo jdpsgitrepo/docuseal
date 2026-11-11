@@ -46,6 +46,7 @@ Rails.application.config.to_prepare do # rubocop:disable Metrics/BlockLength
 
   SubmitterMailer.prepend(Jdpools::CopyEmailReplyTo) unless SubmitterMailer <= Jdpools::CopyEmailReplyTo
   SubmitFormController.prepend(Jdpools::StrictSigningOrder) unless SubmitFormController <= Jdpools::StrictSigningOrder
+  User.prepend(Jdpools::PreferredName) unless User <= Jdpools::PreferredName
 
   unless Docuseal.singleton_class <= Jdpools::OfficeUpload::AdvancedFormatsPatch
     Docuseal.singleton_class.prepend(Jdpools::OfficeUpload::AdvancedFormatsPatch)

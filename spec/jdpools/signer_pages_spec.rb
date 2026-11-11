@@ -84,4 +84,15 @@ RSpec.describe 'Signer-facing pages', type: :request do
 
     expect(response.body).to include('Make it quick to sign').and include('Date Signed')
   end
+
+  it "shows the sender's e-Sign preferred name instead of the Entra name" do
+    sender.update!(first_name: 'Rolando')
+    UserConfig.create!(user: sender, key: Jdpools::PreferredName::KEY, value: 'Rollie')
+
+    get "/s/#{submitter.slug}", headers: thai_phone
+
+    expect(response.body).to include('ส่งโดย Rollie Parame')
+    expect(response.body).not_to include('Rolando')
+    expect(User.find(sender.id).friendly_name).to eq('"Rollie Parame" <rollie@example.com>')
+  end
 end
