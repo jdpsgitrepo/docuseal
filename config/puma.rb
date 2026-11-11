@@ -25,6 +25,10 @@ port ENV.fetch('PORT', 3000)
 #
 environment ENV.fetch('RAILS_ENV', 'development')
 
+# JD Pools: exit 0 after a graceful SIGTERM. Puma's default re-raises SIGTERM once it has stopped, so the
+# process exits 143 and Railway reports every replaced deployment as "Deploy Crashed".
+raise_exception_on_sigterm false
+
 # Specifies the `pidfile` that Puma will use.
 @options[:pidfile] = false
 
