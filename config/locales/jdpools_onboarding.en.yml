@@ -2,7 +2,7 @@
 en:
   jdp_guide_nav: "Guide"
   jdp_how_to_sign: "How to sign?"
-  jdp_email_how_to_sign_html: "New to signing online? <a href=\"%{url}\">How to sign (2 minutes)</a> · วิธีลงนาม"
+  jdp_email_how_to_sign_html: "ลงนามออนไลน์ครั้งแรก? · New to signing online? <a href=\"%{url}\">วิธีลงนาม · How to sign (2 นาที · 2 minutes)</a>"
   jdp_welcome_title: "Welcome to JD e-Sign"
   jdp_welcome_description_html: "Take the 1-minute tour, or <a href=\"%{url}\" class=\"link\">read the guide</a>."
 
