@@ -55,6 +55,9 @@ WORKDIR /app
 RUN apk add --no-cache libpq vips redis onnxruntime leptonica && \
     rm -f /usr/bin/onnx_test_runner /usr/bin/onnxruntime_test
 
+# JD Pools: Word/Excel uploads are converted to PDF with LibreOffice (lib/jdpools/office_upload.rb).
+RUN apk add --no-cache libreoffice-writer libreoffice-calc font-noto-thai font-liberation font-carlito
+
 RUN addgroup -g 2000 docuseal && adduser -u 2000 -G docuseal -s /bin/sh -D -h /home/docuseal docuseal
 
 RUN echo $'.include = /etc/ssl/openssl.cnf\n\
@@ -91,7 +94,8 @@ COPY --chown=docuseal:docuseal --from=download /model.onnx /app/tmp/model.onnx
 COPY --chown=docuseal:docuseal --from=webpack /app/public/packs ./public/packs
 
 RUN mkdir -p /app/public/fonts && ln -s /fonts/DancingScript-Regular.otf /app/public/fonts/ && \
-    mkdir -p /usr/share/fonts/noto && ln -s /fonts/GoNotoKurrent-Regular.ttf /usr/share/fonts/noto/ && ln -s /fonts/GoNotoKurrent-Bold.ttf /usr/share/fonts/noto/ && fc-cache -f && \
+    mkdir -p /usr/share/fonts/noto && ln -s /fonts/GoNotoKurrent-Regular.ttf /usr/share/fonts/noto/ && ln -s /fonts/GoNotoKurrent-Bold.ttf /usr/share/fonts/noto/ && \
+    mkdir -p /usr/share/fonts/jdpools && ln -s /app/config/jdpools/fonts/*.ttf /usr/share/fonts/jdpools/ && cp /app/config/jdpools/fontconfig/*.conf /etc/fonts/conf.d/ && fc-cache -f && \
     bundle exec bootsnap precompile -j 1 --gemfile app/ lib/ && \
     chown -R docuseal:docuseal /app/tmp/cache
 

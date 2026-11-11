@@ -27,6 +27,18 @@ Rails.application.config.to_prepare do
   unless SendSubmitterInvitationEmailJob <= Jdpools::ReminderScheduling
     SendSubmitterInvitationEmailJob.prepend(Jdpools::ReminderScheduling)
   end
+
+  unless Templates::CreateAttachments.singleton_class <= Jdpools::OfficeUpload::CreateAttachmentsPatch
+    Templates::CreateAttachments.singleton_class.prepend(Jdpools::OfficeUpload::CreateAttachmentsPatch)
+  end
+
+  unless TemplatesUploadsController <= Jdpools::OfficeUpload::UploadsControllerPatch
+    TemplatesUploadsController.prepend(Jdpools::OfficeUpload::UploadsControllerPatch)
+  end
+
+  unless Docuseal.singleton_class <= Jdpools::OfficeUpload::AdvancedFormatsPatch
+    Docuseal.singleton_class.prepend(Jdpools::OfficeUpload::AdvancedFormatsPatch)
+  end
 end
 
 # Registered once (not in to_prepare, which re-runs on every code reload in development). The hook

@@ -41,6 +41,7 @@ confidential. Never commit secrets: credentials and IDs live in Railway variable
 | Onboarding: staff guide `/guide` (EN/TH, admin section for admins), JD walkthrough (DocuSeal's tour reworded + Thai), first-steps panel for senders with no documents, public signer help `/help/signing` linked from invitation emails and the signing page | DocuSeal tour, English only, shown only once a template exists | `config/locales/jdpools_onboarding.{en,th}.yml`, `app/controllers/jdpools/{guide,signer_help}_controller.rb`, `app/views/jdpools/` |
 | J.D. Pools branding (colours, logo, favicon, titles) | Pro only (custom logo) | DaisyUI theme in `tailwind.config.js`, `public/jdpools-logo.png`, favicons |
 | Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
+| Word / Excel / ODT / RTF uploads, converted to PDF with headless LibreOffice (Thai TH SarabunPSK maps to Laksaman, which shares its metrics); a failed upload no longer leaves an empty template behind | Pro/cloud only (open source raised, saved an empty template, and showed "Unable to upload file.") | `lib/jdpools/office_upload.rb`, `config/jdpools/fontconfig/`, LibreOffice + fonts in `Dockerfile` |
 | Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
 
 Thai or bilingual email wording needs no code: Settings → Personalization edits the invitation and
@@ -141,6 +142,7 @@ Upstream lands several commits a day. Rules that keep merges cheap:
 | `app/views/shared/_logo.html.erb`, `app/javascript/template_builder/logo.vue` | J.D. Pools logo image in place of the DocuSeal mark |
 | `app/views/shared/_title.html.erb`, `app/views/shared/_html_title.html.erb`, `app/views/layouts/_head_tags.html.erb`, `app/views/{submit,start}_form/_docuseal_logo.html.erb` | "e-Sign" / "J.D. Pools e-Sign" in headers and titles |
 | `public/favicon*`, `public/apple-*` | J.D. Pools favicons (from design-system/favicon) |
+| `Dockerfile` | Installs LibreOffice (writer, calc) and fonts for Word uploads; links the Laksaman fonts and our fontconfig aliases |
 
 The "Powered by DocuSeal" footers (`shared/_powered_by`, `shared/_attribution`, `shared/_email_attribution`) are
 deliberately untouched: section 7(b) of the licence requires that attribution to stay.
@@ -158,7 +160,9 @@ bundle exec rspec spec/jdpools   # our specs
 
 Needs Ruby 4.0.5, arm64 Homebrew `vips redis leptonica onnxruntime libpq`, Postgres, and DocuSeal's
 own PDFium build (`gh release download <tag> -R docusealco/pdfium-binaries -p pdfium-mac-arm64.zip`,
-the tag the Dockerfile pins). Put `libpdfium.dylib` on `DYLD_FALLBACK_LIBRARY_PATH` and invoke the
+the tag the Dockerfile pins). The Word-upload specs need LibreOffice (`brew install --cask libreoffice`)
+and skip without it; with LibreOffice installed, PDFium must come from that download, since upstream's
+fallback picks LibreOffice's own incompatible `libpdfiumlo.dylib`. Put `libpdfium.dylib` on `DYLD_FALLBACK_LIBRARY_PATH` and invoke the
 Ruby binary directly (`ruby $(which bundle) exec rspec`): macOS strips `DYLD_*` from anything
 started through `/usr/bin/env`, which every Ruby binstub's shebang is. Build assets with Node 22
 (`bin/shakapacker`) before request specs that render pages.
