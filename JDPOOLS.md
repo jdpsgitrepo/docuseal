@@ -43,6 +43,7 @@ confidential. Never commit secrets: credentials and IDs live in Railway variable
 | Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
 | Word / Excel / ODT / RTF uploads, converted to PDF with headless LibreOffice (Thai TH SarabunPSK maps to Laksaman, which shares its metrics); a failed upload no longer leaves an empty template behind | Pro/cloud only (open source raised, saved an empty template, and showed "Unable to upload file.") | `lib/jdpools/office_upload.rb`, `config/jdpools/fontconfig/`, LibreOffice + fonts in `Dockerfile` |
 | A template with no document can't be sent, self-signed or started from its share link (the sender is sent back to upload one) | Allowed; the signer gets a blank page | `lib/jdpools/empty_template_guard.rb` |
+| Signer pages show times in the account time zone and Thai month names; the logo fits phone screens; the signing help follows the phone's language; the copy email keeps the sender as Reply-To | Times in UTC, English months in Thai text, 600px logo on the share-link / completed / expired pages | `lib/jdpools/signer_time_zone.rb`, `lib/jdpools/copy_email_reply_to.rb`, `config/locales/th.yml`, `shared/_logo` |
 | Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
 
 Thai or bilingual email wording needs no code: Settings → Personalization edits the invitation and

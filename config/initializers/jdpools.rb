@@ -40,6 +40,12 @@ Rails.application.config.to_prepare do # rubocop:disable Metrics/BlockLength
     controller.prepend(Jdpools::EmptyTemplateGuard) unless controller <= Jdpools::EmptyTemplateGuard
   end
 
+  [SubmitFormController, StartFormController].each do |controller|
+    controller.prepend(Jdpools::SignerTimeZone) unless controller <= Jdpools::SignerTimeZone
+  end
+
+  SubmitterMailer.prepend(Jdpools::CopyEmailReplyTo) unless SubmitterMailer <= Jdpools::CopyEmailReplyTo
+
   unless Docuseal.singleton_class <= Jdpools::OfficeUpload::AdvancedFormatsPatch
     Docuseal.singleton_class.prepend(Jdpools::OfficeUpload::AdvancedFormatsPatch)
   end

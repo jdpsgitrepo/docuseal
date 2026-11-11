@@ -2,7 +2,7 @@
 
 module Jdpools
   # EN / TH for J.D. Pools' own pages: ?lang= sets the jdp_lang cookie (shared with the sign-in
-  # lander), otherwise the cookie decides.
+  # lander), otherwise the cookie decides, otherwise the browser's language.
   module LanguageChoice
     extend ActiveSupport::Concern
 
@@ -22,7 +22,10 @@ module Jdpools
     def jdp_locale
       return params[:lang].to_sym if params[:lang].to_s.in?(Jdpools::LanguageCookie::LANGUAGES)
 
-      Jdpools.locale_for(cookies)
+      return Jdpools.locale_for(cookies) if cookies[Jdpools::LanguageCookie::COOKIE].present?
+
+      # No choice made yet (an external signer from the invitation email): follow the phone.
+      request.headers['Accept-Language'].to_s.downcase.start_with?('th') ? :th : :en
     end
   end
 end
