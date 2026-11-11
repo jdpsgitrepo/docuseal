@@ -47,4 +47,23 @@ RSpec.describe 'Signer-facing pages', type: :request do
       expect(reply_to).to include('rollie@example.com')
     end
   end
+
+  it 'gives the signing help link full contrast and a 44px tap area' do
+    get "/s/#{submitter.slug}", headers: thai_phone
+
+    link = Nokogiri::HTML(response.body).at_css('a[href*="/help/signing"]')
+    expect(link['class']).not_to include('opacity-70')
+    expect(link['style']).to include('min-height: 44px')
+  end
+
+  it 'starts the invitation email with a hidden preview line instead of the greeting' do
+    account.update!(name: 'J.D. Pools')
+    submission.update!(name: 'NDA')
+
+    message = SubmitterMailer.invitation_email(submitter).message
+    html = (message.html_part || message).body.decoded.force_encoding(Encoding::UTF_8)
+
+    expect(html).to match(/display: none.*J\.D\. Pools invites you to sign &quot;NDA&quot;/m)
+    expect(html.index('invites you to sign')).to be < html.index('</div>')
+  end
 end

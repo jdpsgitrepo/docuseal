@@ -1,3 +1,5 @@
+<%# JD Pools: inbox preview line, so phones don't preview "เรียน ท่านผู้รับเอกสาร Dear recipient". %>
+<div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;"><%= t('jdp_email_preheader_invite', name: @submitter.submission.name || @submitter.submission.template&.name, account: @submitter.account.name) %>&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
 <% if @body.present? %>
   <%= render 'custom_content', content: @body, submitter: @submitter %>
   <% if !@body.match?(ReplaceEmailVariables::SUBMITTER_LINK) && !@body.match?(ReplaceEmailVariables::SUBMITTER_ID) && !@body.match?(ReplaceEmailVariables::SUBMISSION_LINK) && !@body.match?(ReplaceEmailVariables::TEMPLATE_ID) && !@submitter.submission.source.in?(%w[api embed]) %>
