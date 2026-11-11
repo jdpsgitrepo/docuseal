@@ -42,6 +42,7 @@ confidential. Never commit secrets: credentials and IDs live in Railway variable
 | J.D. Pools branding (colours, logo, favicon, titles) | Pro only (custom logo) | DaisyUI theme in `tailwind.config.js`, `public/jdpools-logo.png`, favicons |
 | Email through Microsoft Graph | SMTP only (Exchange Online retired SMTP basic auth) | `lib/jdpools/graph_mail_delivery.rb` |
 | Word / Excel / ODT / RTF uploads, converted to PDF with headless LibreOffice (Thai TH SarabunPSK maps to Laksaman, which shares its metrics); a failed upload no longer leaves an empty template behind | Pro/cloud only (open source raised, saved an empty template, and showed "Unable to upload file.") | `lib/jdpools/office_upload.rb`, `config/jdpools/fontconfig/`, LibreOffice + fonts in `Dockerfile` |
+| A template with no document can't be sent, self-signed or started from its share link (the sender is sent back to upload one) | Allowed; the signer gets a blank page | `lib/jdpools/empty_template_guard.rb` |
 | Certificate client auth to Entra | — | `lib/jdpools/entra_client_auth.rb` |
 
 Thai or bilingual email wording needs no code: Settings → Personalization edits the invitation and
@@ -99,6 +100,14 @@ Entra app registration: redirect URI `https://<host>/auth/entra/callback` (Web p
 Graph permission `User.Read`, app roles `DocuSeal.Admin` and `DocuSeal.Sender`, enterprise app
 "Assignment required" = Yes.
 
+## Running programs from the app
+
+Upstream's `config/dotenv.rb` runs the app as root with only the *effective* user switched to
+`docuseal` (2000). Anything spawned with that real/effective mismatch runs in musl's secure mode,
+which ignores `$ORIGIN` and `LD_LIBRARY_PATH`, so LibreOffice failed to find its own libraries in
+production while working from a shell. `Jdpools::OfficeUpload.run_soffice` forks and makes the child
+fully 2000:2000 before `exec`. Do the same for any other external binary.
+
 ## Sign-in lander assets
 
 `public/jdpools/signin.css` is a **verbatim copy** of jdpoolstech `apps/collab/src/app/signin/signin.css`
@@ -143,6 +152,7 @@ Upstream lands several commits a day. Rules that keep merges cheap:
 | `app/views/shared/_title.html.erb`, `app/views/shared/_html_title.html.erb`, `app/views/layouts/_head_tags.html.erb`, `app/views/{submit,start}_form/_docuseal_logo.html.erb` | "e-Sign" / "J.D. Pools e-Sign" in headers and titles |
 | `public/favicon*`, `public/apple-*` | J.D. Pools favicons (from design-system/favicon) |
 | `Dockerfile` | Installs LibreOffice (writer, calc) and fonts for Word uploads; links the Laksaman fonts and our fontconfig aliases |
+| `app/views/templates/edit.html.erb` | `data-accept-file-types` on the builder so its dropzone takes Word files |
 
 The "Powered by DocuSeal" footers (`shared/_powered_by`, `shared/_attribution`, `shared/_email_attribution`) are
 deliberately untouched: section 7(b) of the licence requires that attribution to stay.

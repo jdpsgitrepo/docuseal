@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'open3'
-require 'timeout'
-
 module Jdpools
   # Word uploads. Open-source DocuSeal takes only PDFs and images; converting Word files is a
   # DocuSeal Pro/cloud feature, so a .docx raised InvalidFileType, the upload controller swallowed
@@ -81,24 +78,60 @@ module Jdpools
     end
 
     # A private profile per run: two conversions sharing LibreOffice's default profile lock each other out.
+    # Plain "pdf" lets LibreOffice pick the Writer or Calc export filter for the file.
     def run_soffice(dir, input)
       cmd = [soffice, "-env:UserInstallation=file://#{dir}/profile", '--headless', '--norestore',
-             '--convert-to', 'pdf:writer_pdf_Export', '--outdir', dir, input]
+             '--convert-to', 'pdf', '--outdir', dir, input]
 
-      Open3.popen2e(*cmd, pgroup: true) do |stdin, out, wait|
-        stdin.close
-        reader = Thread.new { out.read }
+      reader, writer = IO.pipe
+      pid = fork do
+        reader.close
+        $stdin.reopen(File::NULL)
+        $stdout.reopen(writer)
+        $stderr.reopen(writer)
+        Process.setpgid(0, 0)
+        drop_to_effective_user
+        exec(*cmd)
+      end
+      writer.close
+      log = Thread.new { reader.read }
 
-        unless wait.join(TIMEOUT)
-          Process.kill('KILL', -wait.pid)
+      status = wait_for(pid)
+      raise ConversionFailed, "LibreOffice failed: #{log.value.to_s.last(500)}" unless status.success?
+    ensure
+      reader&.close
+    end
+
+    def wait_for(pid)
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + TIMEOUT
+
+      loop do
+        _, status = Process.waitpid2(pid, Process::WNOHANG)
+        return status if status
+
+        if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+          Process.kill('KILL', -pid)
+          Process.waitpid(pid)
           raise ConversionFailed, 'LibreOffice timed out'
         end
 
-        log = reader.value
-        raise ConversionFailed, "LibreOffice failed: #{log.to_s.last(500)}" unless wait.value.success?
+        sleep 0.1
       end
-    rescue Errno::ESRCH
-      raise ConversionFailed, 'LibreOffice timed out'
+    end
+
+    # Upstream's config/dotenv.rb runs the app as root with only the *effective* user switched to
+    # docuseal (2000). A child started like that runs in the loader's secure mode, which ignores
+    # LibreOffice's $ORIGIN library path, so soffice died with "Error loading shared library
+    # libuno_sal.so.3". In the forked child, become the effective user for real before exec.
+    def drop_to_effective_user
+      uid = Process.euid
+      gid = Process.egid
+      return if Process.uid == uid && Process.gid == gid
+
+      Process::Sys.seteuid(0)
+      Process.groups = [gid]
+      Process::Sys.setregid(gid, gid)
+      Process::Sys.setreuid(uid, uid)
     end
 
     # Prepended to Templates::CreateAttachments' singleton (upstream uses module_function).

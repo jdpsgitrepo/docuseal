@@ -5,7 +5,7 @@
 
 Rails.application.config.i18n.available_locales += %i[th]
 
-Rails.application.config.to_prepare do
+Rails.application.config.to_prepare do # rubocop:disable Metrics/BlockLength
   Ability.prepend(Jdpools::AbilityScoping) unless Ability <= Jdpools::AbilityScoping
 
   unless PasswordsController <= Jdpools::PasswordLoginGuard::PasswordsControllerPatch
@@ -34,6 +34,10 @@ Rails.application.config.to_prepare do
 
   unless TemplatesUploadsController <= Jdpools::OfficeUpload::UploadsControllerPatch
     TemplatesUploadsController.prepend(Jdpools::OfficeUpload::UploadsControllerPatch)
+  end
+
+  [SubmissionsController, StartFormSelfController, StartFormController].each do |controller|
+    controller.prepend(Jdpools::EmptyTemplateGuard) unless controller <= Jdpools::EmptyTemplateGuard
   end
 
   unless Docuseal.singleton_class <= Jdpools::OfficeUpload::AdvancedFormatsPatch

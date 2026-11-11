@@ -18,6 +18,7 @@ en:
   jdp_feature_jd_it_body: "Staff sign in with their Microsoft work account, and each department sees only its own documents."
   jdp_entra_sign_in_failed: "Microsoft sign-in did not complete. If this keeps happening, ask IT to check that you have access to DocuSeal."
   jdp_role_managed_in_entra: "Managed in Microsoft Entra: assign the DocuSeal.Admin or DocuSeal.Sender app role."
+  jdp_template_has_no_document: "This template has no document yet. Upload the PDF or Word file before sending or signing it."
   devise:
     failure:
       jdp_use_microsoft: "Use Sign in with Microsoft. Password sign-in is for IT break-glass accounts only."
@@ -40,6 +41,7 @@ th:
   jdp_feature_jd_it_body: "พนักงานเข้าสู่ระบบด้วยบัญชี Microsoft ของบริษัท และแต่ละแผนกเห็นเฉพาะเอกสารของตนเอง"
   jdp_entra_sign_in_failed: "เข้าสู่ระบบด้วย Microsoft ไม่สำเร็จ หากยังเกิดขึ้นอีก กรุณาให้ฝ่าย IT ตรวจสอบสิทธิ์การใช้งาน DocuSeal ของคุณ"
   jdp_role_managed_in_entra: "จัดการใน Microsoft Entra: กำหนดบทบาท DocuSeal.Admin หรือ DocuSeal.Sender"
+  jdp_template_has_no_document: "เทมเพลตนี้ยังไม่มีเอกสาร กรุณาอัปโหลดไฟล์ PDF หรือ Word ก่อนส่งหรือลงนาม"
   devise:
     failure:
       jdp_use_microsoft: "กรุณาเข้าสู่ระบบด้วย Microsoft รหัสผ่านใช้ได้เฉพาะบัญชีฉุกเฉินของฝ่าย IT"
