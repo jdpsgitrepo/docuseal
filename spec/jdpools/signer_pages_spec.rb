@@ -66,4 +66,22 @@ RSpec.describe 'Signer-facing pages', type: :request do
     expect(html).to match(/display: none.*J\.D\. Pools invites you to sign &quot;NDA&quot;/m)
     expect(html.index('invites you to sign')).to be < html.index('</div>')
   end
+
+  it 'opens with who is asking, in a compact header, and a quiet Decline' do
+    account.update!(name: 'J.D. Pools')
+
+    get "/s/#{submitter.slug}", headers: thai_phone
+
+    page = Nokogiri::HTML(response.body)
+    expect(page.text).to include('J.D. Pools ขอให้ท่านลงนาม').and include('ส่งโดย Rollie Parame')
+    expect(page.css('#decline_button, button[aria-label="ปฏิเสธ"]').pluck('class')).to all(include('btn-ghost'))
+  end
+
+  it 'tells senders how to make signing quick' do
+    sign_in(sender)
+
+    get '/guide', params: { lang: 'en' }
+
+    expect(response.body).to include('Make it quick to sign').and include('Date Signed')
+  end
 end

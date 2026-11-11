@@ -675,10 +675,15 @@
               type="button"
               :aria-label="`${t('step')} ${index + 1}`"
               :aria-current="index === currentStep ? 'step' : undefined"
-              class="inline border border-base-300 h-3 w-3 rounded-full mx-1 mt-1 p-0"
-              :class="{ 'bg-base-300 steps-progress-current': index === currentStep, 'bg-base-content': (index < currentStep && stepFields[index].every((f) => !f.required || ![null, undefined, ''].includes(values[f.uuid]))) || isCompleted, 'bg-white': index > currentStep }"
+              class="inline-flex items-center justify-center h-6 w-6 mt-1 p-0 rounded-full"
               @click="isCompleted ? '' : [saveStep(), goToStep(index, true)]"
-            />
+            >
+              <!-- JD Pools: 24px tap target (WCAG 2.5.8) around the unchanged 12px dot -->
+              <span
+                class="block border border-base-300 h-3 w-3 rounded-full"
+                :class="{ 'bg-base-300 steps-progress-current': index === currentStep, 'bg-base-content': (index < currentStep && stepFields[index].every((f) => !f.required || ![null, undefined, ''].includes(values[f.uuid]))) || isCompleted, 'bg-white': index > currentStep }"
+              />
+            </button>
           </template>
         </div>
       </nav>

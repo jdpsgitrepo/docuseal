@@ -2,6 +2,8 @@
 en:
   jdp_guide_nav: "Guide"
   jdp_how_to_sign: "How to sign?"
+  jdp_signer_request: "%{account} asks you to sign"
+  jdp_signer_sent_by: "Sent by %{name}"
   jdp_email_how_to_sign_html: "ลงนามออนไลน์ครั้งแรก? · New to signing online? <a href=\"%{url}\">วิธีลงนาม · How to sign (2 นาที · 2 minutes)</a>"
   jdp_email_preheader_invite: "%{account} ขอเรียนเชิญท่านลงนามเอกสาร \"%{name}\" · %{account} invites you to sign \"%{name}\""
   jdp_email_preheader_copy: "เอกสาร \"%{name}\" ได้รับการลงนามครบถ้วนแล้ว สำเนาแนบมาพร้อมอีเมลฉบับนี้ · Signed by everyone, your copy is attached"
@@ -43,6 +45,12 @@ en:
           - "Type the signers' email addresses (one per party) and click Add recipients. They get an email from it-service@jdpools.com straight away."
         body:
           - "That's it. When everyone has signed, you and every signer receive the completed PDF with its audit log."
+      - id: quick
+        title: "Make it quick to sign"
+        body:
+          - "For the date, use the Date Signed field instead of Date. It fills itself in at the moment they sign."
+          - "Fill in what you already know before sending: in the Send dialog, open the Detailed tab and type the signer's name (and any other field you know). They are left with only the signature."
+          - "Set up this way, a customer or supplier signs on their phone with one tap after drawing their signature."
       - id: templates
         title: "Reuse a document as a template"
         body:

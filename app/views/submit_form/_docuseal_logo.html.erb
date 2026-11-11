@@ -1,6 +1,16 @@
-<a href="<%= root_path %>" class="mx-auto text-2xl md:text-3xl font-bold items-center flex space-x-3">
-  <%= render 'shared/logo', class: 'w-9 h-9 md:w-12 md:h-12' %>
-  <span>e-Sign</span>
-</a>
-<%# JD Pools: help for first-time signers. Full-strength colour (opacity-70 failed WCAG AA at 4.46:1) and a 44px tap area. %>
-<a href="<%= jdpools_signer_help_path(lang: I18n.locale.to_s.start_with?('th') ? 'th' : 'en') %>" target="_blank" rel="noopener" class="absolute text-sm underline whitespace-nowrap" style="top: 0.25rem; right: 0.5rem; min-height: 44px; min-width: 44px; padding: 0 0.5rem; display: inline-flex; align-items: center;"><%= t('jdp_how_to_sign') %></a>
+<%# JD Pools: compact signer header. The signer first sees who is asking (account + sender), not a 100px brand
+    block; the help link has full contrast and a 44px target. "Powered by DocuSeal" stays in the page footer. %>
+<% sender = @submitter&.submission&.created_by_user || @submitter&.submission&.template&.author %>
+<% sender_name = sender&.full_name.presence || sender&.email %>
+<div class="w-full flex items-center gap-3 px-2 mx-auto" style="min-height: 48px; max-width: 1000px;">
+  <a href="<%= root_path %>" class="shrink-0 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" aria-label="J.D. Pools">
+    <%= render 'shared/logo', height: '32' %>
+  </a>
+  <div class="min-w-0 flex-1" style="line-height: 1.2;">
+    <p class="font-semibold truncate" style="font-size: 15px;"><%= t('jdp_signer_request', account: @submitter&.account&.name.presence || 'J.D. Pools') %></p>
+    <% if sender_name %>
+      <p class="truncate" style="font-size: 13px; margin-top: 4px;"><%= t('jdp_signer_sent_by', name: sender_name) %></p>
+    <% end %>
+  </div>
+  <a href="<%= jdpools_signer_help_path(lang: I18n.locale.to_s.start_with?('th') ? 'th' : 'en') %>" target="_blank" rel="noopener" class="shrink-0 inline-flex items-center justify-center underline whitespace-nowrap rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style="min-height: 44px; min-width: 44px; padding: 0 8px; font-size: 13px;"><%= t('jdp_how_to_sign') %></a>
+</div>

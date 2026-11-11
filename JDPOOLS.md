@@ -154,6 +154,9 @@ Upstream lands several commits a day. Rules that keep merges cheap:
 | `public/favicon*`, `public/apple-*` | J.D. Pools favicons (from design-system/favicon) |
 | `Dockerfile` | Installs LibreOffice (writer, calc) and fonts for Word uploads; links the Laksaman fonts and our fontconfig aliases |
 | `app/views/templates/edit.html.erb` | `data-accept-file-types` on the builder so its dropzone takes Word files |
+| `app/views/submit_form/_banner.html.erb` | Top margin 16px → 8px under the compact signer header (`submit_form/_docuseal_logo`: who is asking + sender, 48px) |
+| `app/views/submit_form/show.html.erb` | Decline buttons are `btn-ghost`, so Download is the one filled action |
+| `app/javascript/submission_form/form.vue` | Step dots: 24px button around the unchanged 12px dot (WCAG 2.5.8 target size) |
 
 The "Powered by DocuSeal" footers (`shared/_powered_by`, `shared/_attribution`, `shared/_email_attribution`) are
 deliberately untouched: section 7(b) of the licence requires that attribution to stay.
